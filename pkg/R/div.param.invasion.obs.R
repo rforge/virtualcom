@@ -1,6 +1,6 @@
 div.param.invasion.obs <- function(ispSite, iphy, ifun, imyinva){
-     phyloRes <- MDNC_MDNN_Invasive_n(samp=ispSite, dis=iphy, inva=imyinva)
-     funRes <- MDNC_MDNN_Invasive_n(samp=ispSite, dis=ifun, inva=imyinva)
+     phyloRes <- MDNC_MDNN_Invasive_new(samp=ispSite, dis=iphy, inva=imyinva)
+     funRes <- MDNC_MDNN_Invasive_new(samp=ispSite, dis=ifun, inva=imyinva)
 
      iobs <- lapply(imyinva, function(x) {
      			tm <- cbind(sapply(names(phyloRes), function(y)  unlist(phyloRes[[y]][x])), sapply(names(funRes), function(y)  unlist(funRes[[y]][x]))); 

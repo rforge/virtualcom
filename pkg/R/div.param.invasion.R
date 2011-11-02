@@ -10,7 +10,7 @@ div.param.invasion <- function(spSite, phy, fun, nrep=100, invad, null.model = c
     funNULL <- lapply(1:nrep, function(x) taxaShuffle(fun)) 
  
     spSiteNULL <- switch(null.model, 
-        	native_inv = lapply(1:nrep, function(x) NC_native_inv(samp=spSite, inva=invad))        )
+        	native_inv = lapply(1:nrep, function(x) invasion_randomization(samp=spSite, inva=invad))        )
     
     # calculate null model observations            
     tmp <- switch(null.model,

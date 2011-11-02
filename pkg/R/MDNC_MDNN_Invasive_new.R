@@ -44,7 +44,7 @@
 
 
 
-MDNC_MDNN_Invasive_n <- function (samp, dis, inva, invaderOut=FALSE) 
+MDNC_MDNN_Invasive_new <- function (samp, dis, inva, invaderOut=FALSE) 
 {
 
 #########################################	
@@ -96,7 +96,7 @@ most.abdt<-function(data, abun){
 ##########################################
 	
 	MDNC <- MDNN <- MDWNC <- MDMAS <- as.data.frame(matrix(NA, ncol=length(inva), nrow=nrow(samp), dimnames=list(rownames(samp), inva))) # CHANGED: default was 0 before
-
+  samp = as.data.frame(samp)
 	for(j in 1:length(inva)){
 		samp_temp <- samp[eval(parse(text=paste("samp$", inva[j], ">0", sep=""))),]
 		if(nrow(samp_temp)==0) stop(paste("The species", inva[j], "does not appear in any community", sep=" "))

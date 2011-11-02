@@ -1,6 +1,6 @@
 #native_inv: within site replace invader with another species not present in the site
 
-NC_native_inv <- function(samp, dis, inva){
+invasion_randomization <- function(samp, dis, inva){
         # select invaded sites
         natives <- colnames(samp)[!colnames(samp) %in% inva]
         new.invader <- sample(natives, 1)

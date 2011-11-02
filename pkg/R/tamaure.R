@@ -1,6 +1,6 @@
 
 tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0, years=20, K=20, community.in=NA, species.pool.abundance=NA, plot=FALSE, ...){
-  # to test: niche.breadth=5; niche.optima=niche.optima; beta.env=0; beta.comp=0; beta.abun=1; years=20; K=10; community.in=NA; plot=FALSE; env=100; species.pool.abundance=NA
+  # to test: niche.breadth=5; niche.optima=niche.optima; beta.env=0; beta.comp=0; beta.abun=1; years=20; K=10; community.in=NA; plot=TRUE; env=100; species.pool.abundance=NA
 
   #-------
   # 1. getting input
@@ -23,8 +23,7 @@ tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0,
   #-------
   # 3. The loop
   #-------
-  out.p.comp <- matrix(NA, nrow=years, ncol=species.count)	# getting the infomation about the strength of competition after the loop
-	out.community <- matrix(NA, nrow=years, ncol=K)	# getting the information about the species ID at each run after the loop
+	out.community <- as.data.frame(matrix(NA, nrow=years+1, ncol=K))	# getting the information about the species ID at each run after the loop
   if(plot == TRUE) mpd.now <- sapply(1:round(years/4), 
                                 function(x) {community.null <- sample(names(niche.optima), K, replace=TRUE)
                                           mean(species.niche.dist[community.null,community.null])})
@@ -37,35 +36,40 @@ tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0,
 	}  
 	
   	# Calculate the standardized environmental preference (Penv) for all species (this is fix for all runs)	
-	p.env <- dnorm(niche.optima, env, niche.breadth) / dnorm(env, env, niche.breadth) 
+	p.env <- dnorm(x=niche.optima, mean=env, sd=niche.breadth) / dnorm(x=env, mean=env, sd=niche.breadth) 
 
-  for (year in 2:years) {
+  for (year in 1:years) {
     abundance <- as.numeric(table(community)[names(niche.optima)])
     abundance <- ifelse(is.na(abundance), 0, abundance / max(abundance, na.rm = TRUE))
 
     for (i in 1:K) {
       p.comp <- 1 - colSums(species.niche.overlap[community,]) / K
-  	  p.all <- exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(species.pool.abundance + beta.abun * abundance)) 
+  	  p.all <- exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(species.pool.abundance + beta.abun * abundance))
+      if(sd(p.all) == 0) p.all=NULL 
       out <- sample(seq(community), 1)	# Choose randomly one individual to exclude 
 		  community[out] <- sample(names(niche.optima), 1, prob=p.all) # Replace this excluded species by lottery competition      
     }    
-  	out.community[year,] <- community 
+  	out.community[year+1,] <- community 
     
  	  if(plot == TRUE) {  
         n.rand <- round(years/4) + 1
-        filters = cbind(comp=round(p.comp, 2), env=round(p.env, 2), abun=round(abundance, 2), all=round(p.all,2))
+        if(is.null(p.all)) p.all <- rep(0, species.count)
+        filters = cbind(comp=round(p.comp, 2), env=round(p.env, 2), abun=round(abundance, 2), all=round(p.all, 2))
         mpd.now <- c(mpd.now, mean(species.niche.dist[community,community]))
         mypar <- par(mfcol=c(3,2))
            barplot(filters[,1], xlab="Species ID", ylab="p.comp"); barplot(filters[,2], xlab="Species ID", ylab="p.env"); barplot(filters[,3], xlab="Species ID", ylab="abundance")  
-           barplot(filters[,4], xlab="Species ID", ylab="p.all"); barplot(sort(table(community), decreasing = TRUE), xlab="Species ID", ylab="Abundance"); plot((1:length(mpd.now) - n.rand), mpd.now, type="l", xlab="Time", ylab="mpd"); abline(v=0, col=2); abline(h=mean(mpd.now[1:n.rand]), col=3); if(year>2) abline(h=mean(mpd.now[(n.rand+1):length(mpd.now)]), col=3) 
+           barplot(filters[,4], xlab="Species ID", ylab="p.all"); barplot(sort(table(community), decreasing = TRUE), xlab="Species ID", ylab="Abundance"); plot((1:length(mpd.now) - n.rand), mpd.now, type="l", xlab="Time", ylab="mpd"); abline(v=0, col=2); abline(h=mean(mpd.now[1:n.rand]), col=3); if(year>1) abline(h=mean(mpd.now[(n.rand+1):length(mpd.now)]), col=3) 
         par(mypar)
     }
   
   }
         
   # prepare output
-	abundance.vector <- as.numeric(table(out.community[years,])[names(niche.optima)])
+	abundance.vector <- as.numeric(table(community)[names(niche.optima)])
 	names(abundance.vector) <- names(niche.optima)
-	return(list(community=out.community[years,], abundances=abundance.vector, all.communities=out.community))
+	return(list(community=community, abundances=abundance.vector, communities.over.time=out.community))
 }   
 
+
+
+                   
