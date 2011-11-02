@@ -39,10 +39,9 @@ tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0,
 	p.env <- dnorm(x=niche.optima, mean=env, sd=niche.breadth) / dnorm(x=env, mean=env, sd=niche.breadth) 
 
   for (year in 1:years) {
-    abundance <- as.numeric(table(community)[names(niche.optima)])
-    abundance <- ifelse(is.na(abundance), 0, abundance / max(abundance, na.rm = TRUE))
-
     for (i in 1:K) {
+      abundance <- as.numeric(table(community)[names(niche.optima)])
+      abundance <- ifelse(is.na(abundance), 0, abundance)
       p.comp <- 1 - colSums(species.niche.overlap[community,]) / K
   	  p.all <- exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(species.pool.abundance + beta.abun * abundance))
       if(sd(p.all) == 0) p.all=NULL 
@@ -58,10 +57,9 @@ tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0,
         mpd.now <- c(mpd.now, mean(species.niche.dist[community,community]))
         mypar <- par(mfcol=c(3,2))
            barplot(filters[,1], xlab="Species ID", ylab="p.comp"); barplot(filters[,2], xlab="Species ID", ylab="p.env"); barplot(filters[,3], xlab="Species ID", ylab="abundance")  
-           barplot(filters[,4], xlab="Species ID", ylab="p.all"); barplot(sort(table(community), decreasing = TRUE), xlab="Species ID", ylab="Abundance"); plot((1:length(mpd.now) - n.rand), mpd.now, type="l", xlab="Time", ylab="mpd"); abline(v=0, col=2); abline(h=mean(mpd.now[1:n.rand]), col=3); if(year>1) abline(h=mean(mpd.now[(n.rand+1):length(mpd.now)]), col=3) 
+           barplot(filters[,4], xlab="Species ID", ylab="p.all"); hist(table(community), xlab="Abundance", ylab="Frequency", main=""); plot((1:length(mpd.now) - n.rand), mpd.now, type="l", xlab="Time", ylab="mpd"); abline(v=0, col=2); abline(h=mean(mpd.now[1:n.rand]), col=3); if(year>1) abline(h=mean(mpd.now[(n.rand+1):length(mpd.now)]), col=3) 
         par(mypar)
     }
-  
   }
         
   # prepare output
