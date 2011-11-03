@@ -1,7 +1,7 @@
 \name{tamaure}
 \alias{tamaure}
 
-\title{ Assembly of communities from species pool with filters (competition, environment, abundance) }
+\title{ Community assembly from species pool  }
 \description{
   This function simulates the spatially implicit assembly of individuals into a community over time. Individuals come from a pool of species. In the pool each species is described by its niche (mean and sd of a Gaussian distribution) and its frequency. 
 }
@@ -36,17 +36,17 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
 
 \details{
   Community assembly is simulated by asynchroneous updating of K individuals per year. For each update a random individual is removed and replaced by an individual from the species pool. The choice of that individual follows a multinomial distribution, with probabilities being driven by an environmental filter, a competition filter and a local abundance weight. 
-  
-  Environmental filter of species i, p.env: dnorm(niche.optimum[i], mean=env, sd=niche.breadth) / dnorm(env, mean=env, sd=niche.breadth)  
-  Competition filter of species i, p.comp: 1 - sum(alpha_ij * N_j)/sum(N_j), with j beeing the individuals already in the community and alpha_ij the niche-overlap
-  Abundance weight of species i, p.abun: species.pool.abundance_i + beta.abun * abun_i, with abun beeing abundance in community
+  community}{ vector of individuals (names of species in community in final year) }
+  \item{Environmental filter, p.env:} { dnorm(niche.optimum[i], mean=env, sd=niche.breadth) / dnorm(env, mean=env, sd=niche.breadth), with i  the species index } 
+  \item{Competition filter, p.comp:} { 1 - sum(alpha_ij * N_j)/sum(N_j), with j beeing the individuals already in the community and alpha_ij the niche-overlap }
+  \item{Abundance weight, p.abun:} { species.pool.abundance_i + beta.abun * abun_i, with abun beeing abundance in community }
   
   The probability of a species to enter the community is proportional to:
   p.all = exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(p.abun))
 }
 
 \author{ Laure Gallien, Tamara Munkemuller }
-\seealso{ \code{\link{trait.evolution}}, \code{\link{get.attractors}} }
+\seealso{ \code{\link{simulation.experiment}} }
 
 \examples{
   niche.optima <- rnorm(200, 100, 20) # create traits of species in species pool

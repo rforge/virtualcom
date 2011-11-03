@@ -1,7 +1,7 @@
 \name{simulation.experiment}
 \alias{simulation.experiment}
 
-\title{ Runs simulation experiments for community assembly }
+\title{ Runs simulation experiments with eco-evolutionary model }
 \description{
   This function creates (1) a species pool (with phylogenetic and functional attributes), (2) assembles communities (see \code{\link{tamaure}}) and (3) computes functional and phylogenetic diversity indices. After natural communities are assembled invasion can occur.
 }
@@ -10,28 +10,26 @@
 }
 
 \arguments{
-  \item{parameters}{ vector of input parameter values (see details and examples)}
+  \item{parameters}{  a vector of input parameter values (see details and examples)}
   }
 
 
 \value{
-  Several objects are created and returned as a list of elements: 
+  Information on input parameters, species pool, native assembly structure and invader assembly structure are returned as a list : 
   
-  \item{parameter}{ a vector of the parameters used in the simulation }
-  \item{pool}{ a list of different objects that define the species pool. "func" is a dataframe of the trait values for each species and the identity of the invaders. "phylo" is a phylo object of the phylogenetic relationship between the species of the species pool. "invader" is a list that contains the ID of the invader, its niche optimum and its distance to the environmental optimum. }
-  \item{natives}{a list of two elements "all.abundances" and "indices". all.abundances is a sites X species matrix of abundances. indices is a list of matrices containing functional and phylohgenetic diversity information (see details) }
-  \item{invaders}{ like the 'natives' object but for invasion }
- 
-  
+  \item{parameter}{ a vector of the input parameters }
+  \item{pool}{ a list of different objects that define the species pool. "func" is a dataframe of trait values and invader identity. "phylo" is a phylo object. "invader" is a list of the invaders ID, its niche optimum and its performance given the environmental optimum. }
+  \item{natives}{a list of the native commuity structure and diversity measures. "all.abundances" is a site X species matrix of abundances. "indices" is a list of matrices containing functional and phylohgenetic diversity information (see details) }
+  \item{invaders}{ a list of commuity structure and diversity measures after the invasion processes, see "natives" for structure }
 }
 
 \details{
-  The parameter vector needs to contain the following (see also \code{\link{tamaure}}):
+  The parameter vector needs to contain the following:
   \item{niche.breadth}{ value of standard deviation of the Gaussian distribution that describes the niches (for now the same for all species) }
   \item{env}{ value of the environmental optimum of the habitat the community is occupying  }
   \item{beta.env}{ value of the strength of the environmental filter (see details)  }
   \item{beta.comp}{ value of the strength of the competition filter (see details)  }
-  \item{beta.abun}{ value of the strength of the local abundance filter, i.e. the advantage of already being present in the community (see details)  }
+  \item{beta.abun}{ value of the strength of the local abundance filter, i.e. the advantage of already being present in the community (see also \code{\link{tamaure}})  }
   \item{years}{ number of simulated years; If plots == TRUE equilibrium conditions can be checked by eye  }
   \item{K}{ value of carrying capacity, i.e. number of individuals in the community  }
   \item{species.pool.abundance}{ vector of abundances in species pool; if NA than all are set to 1  }
@@ -49,7 +47,7 @@
 }
 
 \author{ Laure Gallien, Tamara Munkemuller }
-\seealso{ \code{\link{tamaure}}, \code{\link{trait.evolution}}, \code{\link{get.attractors}} }
+\seealso{ \code{\link{tamaure}} }
 
 \examples{
   #################################################################################################
@@ -86,14 +84,33 @@
   #################################################################################################
   # run the experiment
   #################################################################################################
-  # relatively slow versions:
   # only one line
   single.run <- simulation.experiment(param[1,]) # run the first line
   str(single.run) 
+  
+  # more lines 
+  # preparation 
+  wrapper <- function(a, path){
+  	library(VirtualCom)
+    load(paste(path,"param", sep=""))
+	  return(simulation.experiment(param[a,]))	
+  }
+  path <- getwd()  
+  save(param, file=paste(path,"param", sep="")) # save parameter table in file  
+  
   # more lines with lapply
-  experiment.run <- lapply(1:2, function(x) simulation.experiment(param[x,])) 
+  experiment.run <- lapply(1:2, wrapper, path=path) 
   str(experiment.run)
-
+  
+  # more lines with snowfall for parallel computing (here for 2 CPUs)
+  library(snowfall)
+  sfInit(parallel=TRUE, cpus=2)
+  stopifnot(sfCpus() == 2)
+  stopifnot(sfParallel() == TRUE)
+  sfStop()
+  experiment.snow <- sfLapply(1:2, wrapper, path=path)
+  str(experiment.snow)
+  
 }
 
 \keyword{ assembly }
