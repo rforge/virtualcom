@@ -1,7 +1,9 @@
 
 tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0, years=20, K=20, community.in=NA, species.pool.abundance=NA, plot=FALSE, ...){
   # to test: niche.breadth=5; niche.optima=niche.optima; beta.env=0; beta.comp=0; beta.abun=1; years=20; K=10; community.in=NA; plot=TRUE; env=100; species.pool.abundance=species.pool.abundance=NA
-
+  require(ape)
+  require(geiger)
+  require(picante)
   #-------
   # 1. getting input
   #-------

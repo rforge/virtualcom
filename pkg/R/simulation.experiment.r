@@ -99,3 +99,7 @@ simulation.experiment <- function(parameters, ...){
     }            
     return(output)
 }   
+
+x <- 40:60
+y <- 60:40
+dnorm(x, mean=y, sd=10) == dnorm(y, mean=x, sd=10)
