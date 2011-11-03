@@ -25,21 +25,36 @@
 
 \details{
   The parameter vector needs to contain the following:
-  \item{niche.breadth}{ value of standard deviation of the Gaussian distribution that describes the niches (for now the same for all species) }
-  \item{env}{ value of the environmental optimum of the habitat the community is occupying  }
-  \item{beta.env}{ value of the strength of the environmental filter (see details)  }
-  \item{beta.comp}{ value of the strength of the competition filter (see details)  }
-  \item{beta.abun}{ value of the strength of the local abundance filter, i.e. the advantage of already being present in the community (see also \code{\link{tamaure}})  }
-  \item{years}{ number of simulated years; If plots == TRUE equilibrium conditions can be checked by eye  }
-  \item{K}{ value of carrying capacity, i.e. number of individuals in the community  }
-  \item{species.pool.abundance}{ vector of abundances in species pool; if NA than all are set to 1  }
-  \item{invasion.time}{ number of years simulated for invasion (after native community has established); if 0 than there is no invasion }
-  \item{n.rep.null.model}{ number of repetitios for null model  }
-  \item{n.species.pool}{ size of species pool  }
-  \item{n.invader.pool}{ number of invaders in species pool  }
-  \item{evol.model}{ choice of evolutionary model which determines phylogenetic signal; 1: BM, 2: OU, 3: delta  }
-  \item{min.phyl.signal}{ minimum value of phylogenetic signal in species pool (NA means that the first evolved value is taken)  }
-  \item{n.communities}{ number of simulated communities  }
+  
+  "niche.breadth": value of standard deviation of the Gaussian distribution that describes the niches (for now the same for all species) 
+  
+  "env": value of the environmental optimum of the habitat the community is occupying  
+  
+  "beta.env": value of the strength of the environmental filter (see details)  
+  
+  "beta.comp": value of the strength of the competition filter (see details) 
+  
+  "beta.abun": value of the strength of the local abundance filter, i.e. the advantage of already being present in the community (see also \code{\link{tamaure}})  
+  
+  "years": number of simulated years; If plots == TRUE equilibrium conditions can be checked by eye 
+  
+  "{K": value of carrying capacity, i.e. number of individuals in the community 
+  
+  "species.pool.abundance": vector of abundances in species pool; if NA than all are set to 1 
+  
+  "invasion.time": number of years simulated for invasion (after native community has established); if 0 than there is no invasion 
+  
+  "n.rep.null.model": umber of repetitios for null model 
+  
+  "n.species.pool": size of species pool  
+  
+  "n.invader.pool": number of invaders in species pool  
+  
+  "evol.model": choice of evolutionary model which determines phylogenetic signal; 1: BM, 2: OU, 3: delta  
+  
+  "{min.phyl.signal": minimum value of phylogenetic signal in species pool (NA means that the first evolved value is taken)  
+  
+  "n.communities": number of simulated communities  
   
   There are 5 matrices describing the diversity structur (5 for natives and 5 for invaders). They contain information on (1) observed diversity, (2) z-scores, (3) ranks, (4) mean of the null distribution and (5) standard deviation of the null distribution. Each matrix gives these information for all sites and for a list of diversity measures (mpd, mntd, ...).  
   
