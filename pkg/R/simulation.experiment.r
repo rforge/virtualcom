@@ -60,9 +60,8 @@ simulation.experiment <- function(parameters, ...){
     output <- list()
     output$parameter <- parameters
     output$pool <- pool
-    output$natives <- list()
-    output$native$all.abundances <- all.abundances
-    output$native$indices <- indices.nat
+    output$natives$all.abundances <- all.abundances
+    output$natives$indices <- indices.nat
 
     #-------------------------------------
     # Invaded community assembly
@@ -90,15 +89,13 @@ simulation.experiment <- function(parameters, ...){
         dist.phy <- dist.phy[colnames(all.abundances.invaded),colnames(all.abundances.invaded)]
         dist.fun <- dist.fun[colnames(all.abundances.invaded),colnames(all.abundances.invaded)]
         
+        # collect results
+        output$invaders$all.abundances <- all.abundances.invaded
         if (sum(all.abundances.invaded[, invader.ID], na.rm=TRUE) !=0 ){ 
           indices.inv <- div.param.invasion(spSite=all.abundances.invaded, phy=dist.phy, fun=dist.fun, nrep=n.rep.null.model, inva=invader.ID, null.model="native_inv")
-        }
-         
-        # collect results
-        output$invaders <- list()
-        output$invaders$all.abundances <- all.abundances.invaded
-        output$invaders$indices <- indices.inv  
-    }   
-         
+          # collect results
+          output$invaders$indices <- indices.inv 
+        }  
+    }            
     return(output)
 }   

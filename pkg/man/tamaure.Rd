@@ -3,7 +3,7 @@
 
 \title{ Assembly of communities from species pool with filters (competition, environment, abundance) }
 \description{
-  This function simulates the spatially implicit assembly of individuals into a community over time. Individuals come from a pool of species. In the pool each species is described by its niche (mean and sd of a Gaussian distribution) and its frequency. In each time step updating is asynchroneous. 
+  This function simulates the spatially implicit assembly of individuals into a community over time. Individuals come from a pool of species. In the pool each species is described by its niche (mean and sd of a Gaussian distribution) and its frequency. 
 }
 \usage{
 tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0, years=20, K=20, community.in=NA, species.pool.abundance=NA, plot=FALSE, ...)
@@ -27,11 +27,11 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
 
 \value{
   List of objects: 
-  \item{community}{ vector of individuals (described by species names) in the community in the last year}
-  \item{abundances}{ a matrix of species (all species in species-pool) times abundance in community}
-  \item{all.communities}{ a matrix of individuals (described by species names) per year} 
+  \item{community}{ vector of individuals (names of species in community in final year) }
+  \item{abundances}{ matrix of species X abundances  }
+  \item{all.communities}{ matrix of individuals (names of species in community) X years } 
   
-  The plots on the left side show how the distribution of the three filters (besides the environmental filter which is kept constant) change over time. The plots on the right side show the overall filter (proportional to the probabilities in the multinomial distribution), the abundances of species in the community and the change of mpd (mean pariwise distance from picante) over time (note that the negative values on the x-axis refer to random community assembly to fascilitate comparison).   
+  The plots on the left side show how the distribution of the three filters (besides the environmental filter which is kept constant) change over time. The plots on the right side show the dynamics of the overall filter (proportional to the probabilities in the multinomial distribution), the abundances distribution dynamics and the dynamics of mpd (mean pariwise distance from picante) over time (note that the negative values on the x-axis refer to random community assembly to fascilitate comparison).   
 }
 
 \details{
@@ -42,7 +42,7 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
   Abundance weight of species i, p.abun: species.pool.abundance_i + beta.abun * abun_i, with abun beeing abundance in community
   
   The probability of a species to enter the community is proportional to:
-  p.all = exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(p.abun)
+  p.all = exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(p.abun))
 }
 
 \author{ Laure Gallien, Tamara Munkemuller }
@@ -51,16 +51,14 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
 \examples{
   niche.optima <- rnorm(200, 100, 20) # create traits of species in species pool
   niche.optima <- sort(niche.optima) # nicer for the plots
-  niche.optima_unif <- 1:200
-  names(niche.optima) <- names(niche.optima_unif) <- seq(niche.optima)
+  names(niche.optima) <- seq(niche.optima)
+  
   # only environmental filter
-  tamaure(beta.env=10, beta.comp=0, beta.abun=0, years=500, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=TRUE)
+  tamaure(beta.env=10, beta.comp=0, beta.abun=0, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=TRUE)
   # only competition filter; there is a border effect!
-  tamaure(beta.env=0, beta.comp=10, beta.abun=0, years=500, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=TRUE)
-  # less border effect with smaller niches but pattern looks almost random 
-  tamaure(beta.env=0, beta.comp=10, beta.abun=0, years=500, niche.breadth=5, niche.optima=niche.optima_unif , env=100, K=50, communityIn=NA, plot=TRUE)
-  # only abundance weight; increased importance of local abundance changes variance of mpd!
-  tamaure(beta.env=0, beta.comp=0, beta.abun=100, years=500, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=TRUE)
+  tamaure(beta.env=0, beta.comp=10, beta.abun=0, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=TRUE)
+  # only abundance weight; increased importance of local abundance changes variance of mpd!; very slow convergence
+  tamaure(beta.env=0, beta.comp=0, beta.abun=100, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=TRUE)
 
 
 }

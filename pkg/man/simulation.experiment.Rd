@@ -3,14 +3,14 @@
 
 \title{ Runs simulation experiments for community assembly }
 \description{
-  This function creates first a species pool (with phylogenetic and functional attributes), second assembles communities (see \code{\link{tamaure}}) and third computes functional and phylogenetic diversity indices. After natural communities are assembled invasion can occur.
+  This function creates (1) a species pool (with phylogenetic and functional attributes), (2) assembles communities (see \code{\link{tamaure}}) and (3) computes functional and phylogenetic diversity indices. After natural communities are assembled invasion can occur.
 }
 \usage{
-simulation.experiment(parameters)
+  simulation.experiment(parameters)
 }
 
 \arguments{
-  \item{parameters}{ vector of input parameter values (see details)}
+  \item{parameters}{ vector of input parameter values (see details and examples)}
   }
 
 
@@ -18,9 +18,9 @@ simulation.experiment(parameters)
   Several objects are created and returned as a list of elements: 
   
   \item{parameter}{ a vector of the parameters used in the simulation }
-  \item{pool}{ a list of different objects that define the species pool. "Traits" is a dataframe of the trait values for each species and the identity of the invaders. "phylo" is a phylo object of the phylogenetic relationship between the species of the species pool. "K" is the value of the phylogenetic signal for the evolved traits. "invader" is the list of element that characterize the invaders: Its identity (ID), trait value (opt), and its distance to the environment of the community (distToOpt)  }
-  \item{native}{a list of two elements "communities" and "indices". communities is a matrix of species (columns) abundance (i.e. number of individuals) par sites (rows). indices is a list of matrices, each matrix represent the value of different indices (columns) per communities (see details for more precision on the indices) }
-  \item{invasion}{ a list of three elements "communities", "process", and "indices". communities and indices are the equivalent of "communities" and "indices" for the native communities but applied to invaded communities. Process is a dataframe showing the presence of the invaders in the communities (rows) at each year (columns) }
+  \item{pool}{ a list of different objects that define the species pool. "func" is a dataframe of the trait values for each species and the identity of the invaders. "phylo" is a phylo object of the phylogenetic relationship between the species of the species pool. "invader" is a list that contains the ID of the invader, its niche optimum and its distance to the environmental optimum. }
+  \item{natives}{a list of two elements "all.abundances" and "indices". all.abundances is a sites X species matrix of abundances. indices is a list of matrices containing functional and phylohgenetic diversity information (see details) }
+  \item{invaders}{ like the 'natives' object but for invasion }
  
   
 }
@@ -43,10 +43,12 @@ simulation.experiment(parameters)
   \item{min.phyl.signal}{ minimum value of phylogenetic signal in species pool (NA means that the first evolved value is taken)  }
   \item{n.communities}{ number of simulated communities  }
   
+  There are 5 matrices describing the diversity structur (5 for natives and 5 for invaders). They contain information on (1) observed diversity, (2) z-scores, (3) ranks, (4) mean of the null distribution and (5) standard deviation of the null distribution. Each matrix gives these information for all sites and for a list of diversity measures (mpd, mntd, ...).  
+  
   
 }
 
-\author{ Laure Gallien, Tamara Münkemüller }
+\author{ Laure Gallien, Tamara Munkemuller }
 \seealso{ \code{\link{tamaure}}, \code{\link{trait.evolution}}, \code{\link{get.attractors}} }
 
 \examples{
@@ -55,7 +57,7 @@ simulation.experiment(parameters)
   #################################################################################################
   # general
   years <- 10					
-  invasion.time <- 0				
+  invasion.time <- 2				
   n.rep.null.model <- 10				
   n.rep.scenario <- 2					
   
@@ -86,10 +88,11 @@ simulation.experiment(parameters)
   #################################################################################################
   # relatively slow versions:
   # only one line
-  simulation.experiment(param[1,]) # run the first line 
+  single.run <- simulation.experiment(param[1,]) # run the first line
+  str(single.run) 
   # more lines with lapply
-  results <- lapply(1:2, function(x) simulation.experiment(param[x,])) 
-  
+  experiment.run <- lapply(1:2, function(x) simulation.experiment(param[x,])) 
+  str(experiment.run)
 
 }
 
