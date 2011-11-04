@@ -36,7 +36,7 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
 
 \details{
   Community assembly is simulated by asynchroneous updating of K individuals per year. For each update a random individual is removed and replaced by an individual from the species pool. The choice of that individual follows a multinomial distribution, with probabilities being driven by an environmental filter, a competition filter and a local abundance weight. 
-  community}{ vector of individuals (names of species in community in final year) }
+
   \item{Environmental filter, p.env:} { dnorm(niche.optimum[i], mean=env, sd=niche.breadth) / dnorm(env, mean=env, sd=niche.breadth), with i  the species index } 
   \item{Competition filter, p.comp:} { 1 - sum(alpha_ij * N_j)/sum(N_j), with j beeing the individuals already in the community and alpha_ij the niche-overlap }
   \item{Abundance weight, p.abun:} { species.pool.abundance_i + beta.abun * abun_i, with abun beeing abundance in community }
