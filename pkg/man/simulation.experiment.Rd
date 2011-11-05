@@ -10,22 +10,7 @@
 }
 
 \arguments{
-
-  \item{parameters}{  a vector of input parameter values (see details and examples)}
-}
-
-
-\value{
-  Information on input parameters, species pool, native assembly structure and invader assembly structure are returned as a list : 
-  
-  \item{parameter}{ a vector of the input parameters }
-  \item{pool}{ a list of different objects that define the species pool. "func" is a dataframe of trait values and invader identity. "phylo" is a phylo object. "invader" is a list of the invaders ID, its niche optimum and its performance given the environmental optimum. }
-  \item{natives}{a list of the native commuity structure and diversity measures. "all.abundances" is a site X species matrix of abundances. "indices" is a list of matrices containing functional and phylohgenetic diversity information (see details) }
-  \item{invaders}{ a list of commuity structure and diversity measures after the invasion processes, see "natives" for structure }
-}
-
-\details{
-  The parameter vector needs to contain the following:
+  The only argument is a named vector of input parameter values with the following entries:
   
   \item{niche.breadth}{ value of standard deviation of the Gaussian distribution that describes the niches (for now the same for all species)  } 
   \item{env}{ value of the environmental optimum of the habitat the community is occupying  }
@@ -43,13 +28,25 @@
   \item{min.phyl.signal}{ minimum value of phylogenetic signal in species pool (NA means that the first evolved value is taken)}   
   \item{n.communities}{ number of simulated communities}  
   
-  There are 5 matrices describing the diversity structur (5 for natives and 5 for invaders). They contain information on (1) observed diversity, (2) z-scores, (3) ranks, (4) mean of the null distribution and (5) standard deviation of the null distribution. Each matrix gives these information for all sites and for a list of diversity measures (mpd, mntd, ...).  
+}
+
+
+\value{
+  Information on input parameters, species pool, native assembly structure and invader assembly structure are returned as a list : 
   
-  
+  \item{parameter}{ a vector of the input parameters }
+  \item{pool}{ a list of different objects that define the species pool. "func" is a dataframe of trait values and invader identity. "phylo" is a phylo object. "invader" is a list of the invaders ID, its niche optimum and its performance given the environmental optimum. }
+  \item{natives}{a list of the native commuity structure and diversity measures. "all.abundances" is a site X species matrix of abundances. "indices" is a list of matrices containing functional and phylohgenetic diversity information (see details) }
+  \item{invaders}{ a list of commuity structure and diversity measures after the invasion processes, see "natives" for structure }
+}
+
+\details{
+  The output lists for natives and invaders consist of 5 matrices describing the diversity structur. 
+  They contain information on (1) observed diversity, (2) z-scores, (3) ranks, (4) mean of the null distribution and (5) standard deviation of the null distribution. Each matrix gives these information for all sites and for a list of diversity measures (mpd, mntd, ...).  
 }
 
 \author{ Laure Gallien, Tamara Munkemuller }
-\seealso{ \code{\link{tamaure}} }
+\seealso{ \code{\link{tamaure}} for the community assembly function}
 
 \examples{
   #################################################################################################
