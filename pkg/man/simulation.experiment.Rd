@@ -43,6 +43,7 @@
 \details{
   The output lists for natives and invaders consist of 5 matrices describing the diversity structur. 
   They contain information on (1) observed diversity, (2) z-scores, (3) ranks, (4) mean of the null distribution and (5) standard deviation of the null distribution. Each matrix gives these information for all sites and for a list of diversity measures (mpd, mntd, ...).  
+
 }
 
 \author{ Laure Gallien, Tamara Munkemuller }
