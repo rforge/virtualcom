@@ -101,15 +101,7 @@
   # more lines with lapply
   experiment.run <- lapply(1:2, wrapper, path=path) 
   str(experiment.run)
-  
-  # more lines with snowfall for parallel computing (here for 2 CPUs)
-  library(snowfall)
-  sfInit(parallel=TRUE, cpus=2)
-  stopifnot(sfCpus() == 2)
-  stopifnot(sfParallel() == TRUE)
-  sfStop()
-  experiment.snow <- sfLapply(1:2, wrapper, path=path)
-  str(experiment.snow)
+
   
 }
 
