@@ -7,6 +7,8 @@ div.param.native.obs <- function(spSite, phy, fun){
     mntd_fun_med = mntd_median(spSite, fun),
     mpd_phy_ab = mpd(spSite, phy, abundance.weighted=TRUE),
     mntd_phy_ab = mntd(spSite, phy, abundance.weighted=TRUE),
+    rao_a_fun = disc(as.data.frame(t(spSite)), as.dist(phy)),
     mpd_fun_ab = mpd(spSite, fun, abundance.weighted=TRUE),
-    mntd_fun_ab = mntd(spSite, fun, abundance.weighted=TRUE)))
+    mntd_fun_ab = mntd(spSite, fun, abundance.weighted=TRUE),
+    rao_a_fun = disc(as.data.frame(t(spSite)), as.dist(fun))))
 }

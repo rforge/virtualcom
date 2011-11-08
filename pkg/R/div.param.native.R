@@ -12,10 +12,10 @@ div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.la
     
     spSiteNULL <- switch(null.model, 
       		taxa.labels = replicate(nrep, spSite),
-      		richness = replicate(nrep, randomizeMatrix(nrep,null.model = "richness")),
-      		frequency = replicate(nrep, randomizeMatrix(nrep,null.model = "frequency")),
-      		independentswap = replicate(nrep, randomizeMatrix(nrep,null.model = "independentswap")),
-      		trialswap = replicate(nrep, randomizeMatrix(nrep,null.model = "trialswap")))
+      		richness = replicate(nrep, randomizeMatrix(spSite,null.model = "richness")),
+      		frequency = replicate(nrep, randomizeMatrix(spSite,null.model = "frequency")),
+      		independentswap = replicate(nrep, randomizeMatrix(spSite,null.model = "independentswap")),
+      		trialswap = replicate(nrep, randomizeMatrix(spSite,null.model = "trialswap")))
     
     # calculate null model observations            
     tmp <- switch(null.model,
