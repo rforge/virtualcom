@@ -10,7 +10,13 @@ simulation.experiment <- function(parameters, ...){
     # general
   	years <- parameters["years"]		
   	invasion.time <- parameters["invasion.time"]	
- 	  n.rep.null.model <- parameters["n.rep.null.model"]			
+
+    #Null model characteristics
+    n.rep.null.model <- parameters["n.rep.null.model"]
+    my.null.model<-parameters["null.model"]
+    if (is.na(null.model)) my.null.model<-"taxa.labels"
+    suitability<-ifelse(my.null.model=="constrained",parameters("suitability"),suitability<-FALSE)
+      
     # species pool
   	n.species.pool <- parameters["n.species.pool"] 						
   	n.invader.pool <- parameters["n.invader.pool"] 			
@@ -24,7 +30,8 @@ simulation.experiment <- function(parameters, ...){
   	beta.env <- parameters["beta.env"]			
   	beta.comp <- parameters["beta.comp"]				
   	beta.abun <- parameters["beta.abun"]
-    species.pool.abundance <- parameters["species.pool.abundance"]								
+    species.pool.abundance <- parameters["species.pool.abundance"]
+
   
     #-------------------------------------
     # Species pool: phylogenetic tree, trait values and invaders in the tree
@@ -54,7 +61,8 @@ simulation.experiment <- function(parameters, ...){
     # Get indices and null models for diversity:
  	  dist.phy <- cophenetic(pool$phylo)
  	  dist.fun <- as.matrix(dist(niche.optima,diag=TRUE,upper=TRUE))
-    indices.nat <- div.param.native(spSite=all.abundances, phy=dist.phy, fun=dist.fun, nrep=n.rep.null.model, null.model = "taxa.labels") # zNULL = NaN when sdNULL=0				  
+    if (suitability){sp.suit<-dnorm(x=niche.optima, mean=env, sd=niche.breadth)/dnorm(x=env, mean=env, sd=niche.breadth)}
+    indices.nat <- div.param.native(spSite=all.abundances, phy=dist.phy, fun=dist.fun,suit=sp.suit,nrep=n.rep.null.model, null.model = my.null.model) # zNULL = NaN when sdNULL=0				  
     
     # collect results
     output <- list()

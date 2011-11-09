@@ -1,6 +1,6 @@
-div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
+div.param.native <- function(spSite, phy, fun, suit,nrep=100, null.model = c("taxa.labels", "richness",
     "frequency", "sample.pool", "phylogeny.pool", "independentswap",
-    "trialswap")){
+    "trialswap","constrained")){
     # to test: spSite=output$native$communities; phy=Cophi; fun=Cofun; nrep=100; null.model = "taxa.labels"
     # get observed values
     obs <- sapply(div.param.native.obs(spSite, phy, fun), function(z) z)
@@ -15,7 +15,8 @@ div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.la
       		richness = replicate(nrep, randomizeMatrix(spSite,null.model = "richness")),
       		frequency = replicate(nrep, randomizeMatrix(spSite,null.model = "frequency")),
       		independentswap = replicate(nrep, randomizeMatrix(spSite,null.model = "independentswap")),
-      		trialswap = replicate(nrep, randomizeMatrix(spSite,null.model = "trialswap")))
+      		trialswap = replicate(nrep, randomizeMatrix(spSite,null.model = "trialswap")),
+          constrained = replicate(nrep,constrained.NM(spSite,taxa,suit)))
     
     # calculate null model observations            
     tmp <- switch(null.model,
@@ -23,7 +24,8 @@ div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.la
       		richness = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
       		frequency = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
       		independentswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
-      		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)))
+      		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun))
+          constrained = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)))
       
     # get output for null model observations
     tmp1 <- lapply(1:nrow(obs), function(z) lapply(1:length(colnames(obs)), function(y) sapply(1:nrep, function(x) tmp[[x]][[y]][[z]])))
