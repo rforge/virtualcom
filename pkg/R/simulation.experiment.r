@@ -15,7 +15,7 @@ simulation.experiment <- function(parameters, ...){
     n.rep.null.model <- parameters["n.rep.null.model"]
     my.null.model<-parameters["null.model"]
     if (is.na(null.model)) my.null.model<-"taxa.labels"
-    suitability<-ifelse(my.null.model=="constrained",parameters("suitability"),suitability<-FALSE)
+    suitability<-ifelse(my.null.model=="constrained",parameters("suitability"),FALSE)
       
     # species pool
   	n.species.pool <- parameters["n.species.pool"] 						
