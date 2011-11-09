@@ -15,8 +15,8 @@ simulation.experiment <- function(parameters, ...){
     n.rep.null.model <- parameters["n.rep.null.model"]
     my.null.model<-parameters["null.model"]
     if (is.na(null.model)) my.null.model<-"taxa.labels"
-    suitability<-ifelse(my.null.model=="constrained",parameters("suitability"),FALSE)
-      
+    suitability<-ifelse(my.null.model=="constrained",parameters("suitability"),FALSE)#TRUE or FALSE to the use of suitability
+    taxa.level<-ifelse(my.null.model=="constrained",parameters("taxa.level"),NA)    #Either nothing, a numeric between 0 and 1 (height-type of cutting), an integer ("number of groups"-type of cutting)
     # species pool
   	n.species.pool <- parameters["n.species.pool"] 						
   	n.invader.pool <- parameters["n.invader.pool"] 			
@@ -62,7 +62,11 @@ simulation.experiment <- function(parameters, ...){
  	  dist.phy <- cophenetic(pool$phylo)
  	  dist.fun <- as.matrix(dist(niche.optima,diag=TRUE,upper=TRUE))
     if (suitability){sp.suit<-dnorm(x=niche.optima, mean=env, sd=niche.breadth)/dnorm(x=env, mean=env, sd=niche.breadth)}
-    indices.nat <- div.param.native(spSite=all.abundances, phy=dist.phy, fun=dist.fun,suit=sp.suit,nrep=n.rep.null.model, null.model = my.null.model) # zNULL = NaN when sdNULL=0				  
+    if (!is.na(taxa.level)){
+      taxa<-create.taxa(pool$phylo,taxa.level)
+    }
+    
+    indices.nat <- div.param.native(spSite=all.abundances, phy=dist.phy, fun=dist.fun,nrep=n.rep.null.model, null.model = my.null.model,suit=sp.suit,taxa=taxa) # zNULL = NaN when sdNULL=0				  
     
     # collect results
     output <- list()

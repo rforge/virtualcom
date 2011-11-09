@@ -1,6 +1,6 @@
-div.param.native <- function(spSite, phy, fun, suit,nrep=100, null.model = c("taxa.labels", "richness",
+div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
     "frequency", "sample.pool", "phylogeny.pool", "independentswap",
-    "trialswap","constrained")){
+    "trialswap","constrained"),suit=NULL,taxa=NULL){
     # to test: spSite=output$native$communities; phy=Cophi; fun=Cofun; nrep=100; null.model = "taxa.labels"
     # get observed values
     obs <- sapply(div.param.native.obs(spSite, phy, fun), function(z) z)
