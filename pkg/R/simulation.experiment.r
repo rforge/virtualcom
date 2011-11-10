@@ -62,8 +62,11 @@ simulation.experiment <- function(parameters, ...){
  	  dist.phy <- cophenetic(pool$phylo)
  	  dist.fun <- as.matrix(dist(niche.optima,diag=TRUE,upper=TRUE))
     if (suitability){sp.suit<-dnorm(x=niche.optima, mean=env, sd=niche.breadth)/dnorm(x=env, mean=env, sd=niche.breadth)}
-    if (!is.na(taxa.level)){
+    
+    taxa<-NULL
+    if(!is.na(taxa.level)){
       taxa<-create.taxa(pool$phylo,taxa.level)
+      taxa<-taxa[[1]]#Maybe later, this will be corrected to allow the use of different null models or constraint to evaluate the same communities.
     }
     
     indices.nat <- div.param.native(spSite=all.abundances, phy=dist.phy, fun=dist.fun,nrep=n.rep.null.model, null.model = my.null.model,suit=sp.suit,taxa=taxa) # zNULL = NaN when sdNULL=0				  

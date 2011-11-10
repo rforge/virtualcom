@@ -16,7 +16,7 @@ div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.la
       		frequency = replicate(nrep, randomizeMatrix(spSite,null.model = "frequency")),
       		independentswap = replicate(nrep, randomizeMatrix(spSite,null.model = "independentswap")),
       		trialswap = replicate(nrep, randomizeMatrix(spSite,null.model = "trialswap")),
-          constrained = replicate(nrep,constrained.NM(spSite,taxa,suit)))
+          	constrained = replicate(nrep,constrained.NM(spSite,taxa,suit)))
     
     # calculate null model observations            
     tmp <- switch(null.model,
