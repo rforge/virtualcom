@@ -24,7 +24,7 @@ div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.la
       		richness = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
       		frequency = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
       		independentswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
-      		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun))
+      		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
           constrained = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)))
       
     # get output for null model observations
