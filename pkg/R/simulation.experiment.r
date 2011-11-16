@@ -69,7 +69,7 @@ simulation.experiment <- function(parameters, ...){
       taxa<-taxa[[1]]#Maybe later, this will be corrected to allow the use of different null models or constraint to evaluate the same communities.
     }
     
-    indices.nat <- div.param.native(spSite=all.abundances, phy=dist.phy, fun=dist.fun,nrep=n.rep.null.model, null.model = my.null.model,suit=sp.suit,taxa=taxa) # zNULL = NaN when sdNULL=0				  
+    indices.nat <- div.param.native(spSite=all.abundances, niche.opt=niche.optima, tree=pool$phylo,phy=dist.phy, fun=dist.fun,nrep=n.rep.null.model, null.model = my.null.model,suit=sp.suit,taxa=taxa) # zNULL = NaN when sdNULL=0				  
     
     # collect results
     output <- list()

@@ -1,9 +1,9 @@
-div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
+div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
     "frequency", "sample.pool", "phylogeny.pool", "independentswap",
     "trialswap","constrained"),suit=NULL,taxa=NULL){
     # to test: spSite=output$native$communities; phy=Cophi; fun=Cofun; nrep=100; null.model = "taxa.labels"
     # get observed values
-    obs <- sapply(div.param.native.obs(spSite, phy, fun), function(z) z)
+    obs <- sapply(div.param.native.obs(spSite, phy, fun,niche.opt,tree), function(z) z)
 
     # prepare randomizations for null models
     null.model <- match.arg(null.model)
@@ -26,6 +26,12 @@ div.param.native <- function(spSite, phy, fun, nrep=100, null.model = c("taxa.la
       		independentswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
       		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)),
           constrained = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun)))
+    
+    #Testing unbalanceness of local trees
+    colless.indices<-apply(spSite,1,function(x){
+      tree.red<-drop.tip(tree,tree$tip.label[x==0])
+      col.test<-colless.test(tree,alternative="greater"n.mc=100)$p.value
+    })
       
     # get output for null model observations
     tmp1 <- lapply(1:nrow(obs), function(z) lapply(1:length(colnames(obs)), function(y) sapply(1:nrep, function(x) tmp[[x]][[y]][[z]])))
