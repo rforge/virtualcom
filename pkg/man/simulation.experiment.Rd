@@ -56,15 +56,20 @@
   # general
   years <- 10					
   invasion.time <- 2				
-  n.rep.null.model <- 10				
-  n.rep.scenario <- 2					
+	n.rep.scenario <- 2					
   
   # species pool
   n.species.pool <- 200					
   n.invader.pool <- 1						
   niche.breadth <- c(5, 20)
   evol.model <- 1					
-  min.phyl.signal <- NA				
+  min.phyl.signal <- NA			
+  
+   #null model characteristics
+  n.rep.null.model <- 10
+  null.model<-"taxa.labels"
+  suitability<-FALSE
+  taxa.level<-NA
   
   # communities
   n.communities <- 5					
@@ -78,7 +83,7 @@
   # create table with parameters
   param <- expand.grid(rep.scenario=1:n.rep.scenario, K=K, n.species.pool=n.species.pool, n.invader.pool=n.invader.pool, beta.env=beta.env, 
       beta.comp=beta.comp, beta.abun=beta.abun, niche.breadth=niche.breadth, evol.model=evol.model, years=years, invasion.time=invasion.time, 
-      n.communities=n.communities, n.rep.null.model=n.rep.null.model, env=env, min.phyl.signal=min.phyl.signal, species.pool.abundance=species.pool.abundance)
+      n.communities=n.communities, n.rep.null.model=n.rep.null.model, env=env, min.phyl.signal=min.phyl.signal, species.pool.abundance=species.pool.abundance, null.model=null.model,suitability=suitability,taxa.level=taxa.level)
   param$simu.id <- 1:nrow(param)
 
   #################################################################################################

@@ -67,3 +67,4 @@ tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0,
 	return(list(community=community, abundances=abundance.vector, communities.over.time=out.community))
 }
    
+
