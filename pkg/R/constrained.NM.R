@@ -1,7 +1,6 @@
 constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
   spxp<-as.data.frame(spxp)
   if (ncol(spxp)==1){spxp<-t(spxp)}
-  if (ncol(spxp)==1) {spxp<-t(spxp)}
   if (!is.null(taxa)){if (ncol(spxp)!=length(taxa)){stop("Non convenient taxa dimension ")}}
   if (!is.null(sp.suit)){
     if (any(dim(sp.suit)!=dim(spxp))){
@@ -12,8 +11,7 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
 
 #Basic null model : tree tips shuffling
   if (is.null(taxa) & is.null(sp.suit)){
-    spxp.rand<-spxp[,sample(1:ncol(spxp),ncol(spxp))]
-    spxp.rand<-as.data.frame(spxp.rand)
+    spxp.rand<-spxp[,sample(1:ncol(spxp))]
     if(ncol(spxp.rand)==1){spxp.rand<-t(spxp.rand)}
   }
 
@@ -68,6 +66,7 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
         y.rand<-unsplit(rand.split,c(taxa,taxa))
         return(y.rand)})    
   }
+  spxp
   rownames(spxp.rand)<-rownames(spxp)
   colnames(spxp.rand)<-colnames(spxp)  
   return(spxp.rand)

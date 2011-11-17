@@ -11,12 +11,12 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
   #  funNULL <- lapply(1:nrep, function(x) taxaShuffle(fun))
 
     spSiteNULL <- switch(null.model, 
-      		taxa.labels = replicate(nrep,constrained.NM(spSite,taxa=NULL,suit=NULL)),
+      		taxa.labels = lapply(1:nrep, function(x){constrained.NM(spSite,taxa=NULL,sp.suit=NULL)}),
       		richness = replicate(nrep, randomizeMatrix(spSite,null.model = "richness")),
       		frequency = replicate(nrep, randomizeMatrix(spSite,null.model = "frequency")),
       		independentswap = replicate(nrep, randomizeMatrix(spSite,null.model = "independentswap")),
       		trialswap = replicate(nrep, randomizeMatrix(spSite,null.model = "trialswap")),
-          	constrained = replicate(nrep,constrained.NM(spSite,taxa,suit)))
+          constrained = lapply(1:nrep,function(x){constrained.NM(spSite,taxa,suit)}))
     
     # calculate null model observations            
     tmp <- switch(null.model,
@@ -29,8 +29,8 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
     
     #Testing unbalanceness of local trees
     colless.indices<-apply(spSite,1,function(x){
-      tree.red<-drop.tip(tree,tree$tip.label[x==0])
-      col.test<-colless.test(tree,alternative="greater",n.mc=100)$p.value
+      tree.red<-drop.tip(tree,as.character(tree$tip.label[x==0]))
+      col.test<-colless.test(as.treeshape(tree.red),alternative="greater",n.mc=100)$p.value
     })
       
     # get output for null model observations

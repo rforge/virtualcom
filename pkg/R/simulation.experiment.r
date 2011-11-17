@@ -5,7 +5,7 @@ simulation.experiment <- function(parameters, ...){
     # get input parameters
     #-------------------------------------  
     #Null model characteristics
-    my.null.model<-as.character(parameters["null.model"])
+    my.null.model<-parameters$null.model
     suitability<-ifelse(my.null.model=="constrained",parameters("suitability"),FALSE)#TRUE or FALSE to the use of suitability
     taxa.level<-ifelse(my.null.model=="constrained",parameters("taxa.level"),NA)    #Either nothing, a numeric between 0 and 1 (height-type of cutting), an integer ("number of groups"-type of cutting)
  
@@ -64,8 +64,10 @@ simulation.experiment <- function(parameters, ...){
     all.abundances2<-all.abundances[,as.character(tree.nat$tip.label)]
     
     # Get indices and null models for diversity:
- 	  dist.phy <- cophenetic(tree.nat)
- 	  dist.fun <- as.matrix(dist(niche.optima.nat,diag=TRUE,upper=TRUE))
+ 	  dist.phy.nat <- cophenetic(tree.nat)
+ 	  dist.fun.nat <- as.matrix(dist(niche.optima.nat,diag=TRUE,upper=TRUE))
+    dist.phy <- cophenetic(pool$phylo)
+ 	  dist.fun<- as.matrix(dist(niche.optima,diag=TRUE,upper=TRUE))
     taxa<-sp.suit<-NULL
     if (suitability){sp.suit<-dnorm(x=niche.optima, mean=env, sd=niche.breadth)/dnorm(x=env, mean=env, sd=niche.breadth)}
 
@@ -74,7 +76,7 @@ simulation.experiment <- function(parameters, ...){
       taxa<-taxa[[1]]#Maybe later, this will be corrected to allow the use of different null models or constraint to evaluate the same communities.
     }
 
-    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat,phy=dist.phy, fun=dist.fun,nrep=n.rep.null.model, null.model = my.null.model,suit=sp.suit,taxa=taxa) # zNULL = NaN when sdNULL=0				  
+    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat,phy=dist.phy.nat, fun=dist.fun.nat,nrep=n.rep.null.model, null.model = "taxa.labels",suit=sp.suit,taxa=taxa) # zNULL = NaN when sdNULL=0				  
     
     # collect results
     output <- list()
