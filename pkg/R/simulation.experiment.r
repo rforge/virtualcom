@@ -72,7 +72,7 @@ simulation.experiment <- function(parameters, ...){
     if (suitability){sp.suit<-dnorm(x=niche.optima, mean=env, sd=niche.breadth)/dnorm(x=env, mean=env, sd=niche.breadth)}
 
     if(is.numeric(taxa.level)){
-      taxa<-create.taxa(pool$phylo,taxa.level)
+      taxa<-create.taxa(tree.nat,taxa.level)
       taxa<-taxa[[1]]#Maybe later, this will be corrected to allow the use of different null models or constraint to evaluate the same communities.
     }
 

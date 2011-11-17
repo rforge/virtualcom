@@ -55,7 +55,7 @@
   #################################################################################################
   # general
   years <- 10					
-  invasion.time <- 2				
+  invasion.time <- 0				
 	n.rep.scenario <- 2					
   
   # species pool

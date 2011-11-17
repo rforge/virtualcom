@@ -12,6 +12,12 @@ create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.sig
         names(niche.optima) <- pool[[1]]$SpeciesID
 	    }
   	}
+    phy.sign<-phylosignal(niche.optima, pool[[2]])
+    pool$K$value<-phy.sign$K
+    pool$K$pv<-phy.sign$PIC.variance.P
+     
+    col.test<-colless.test(as.treeshape(pool[[2]]),alternative="greater")
+    pool$colless.rank<-col.test$p.value
   	names(pool) <-  c("func", "phylo")
     # pool$K <- phylosignal(niche.optima, pool[[2]])$K
     pool$invader <- list(ID=pool[[1]][pool[[1]]$Inv==1,"SpeciesID"], opt=niche.optima[pool[[1]][pool[[1]]$Inv==1,"SpeciesID"]], distToOpt= abs(env - niche.optima[pool[[1]][pool[[1]]$Inv==1,"SpeciesID"]]))
