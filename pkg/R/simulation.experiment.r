@@ -4,14 +4,10 @@ simulation.experiment <- function(parameters, ...){
     #-------------------------------------
     # get input parameters
     #-------------------------------------  
-    #Null model characteristics
-    my.null.model<-as.character(parameters$null.model)
-    suitability<-ifelse(my.null.model=="constrained",parameters$suitability,FALSE)#TRUE or FALSE to the use of suitability
-    taxa.level<-ifelse(my.null.model=="constrained",parameters$taxa.level,NA)    #Either nothing, a numeric between 0 and 1 (height-type of cutting), an integer ("number of groups"-type of cutting)
- 
     my.names <- names(parameters)
   	parameters <- as.numeric(parameters) 
-    names(parameters) <- my.names   
+    names(parameters) <- my.names 
+     
     # general
   	years <- parameters["years"]		
   	invasion.time <- parameters["invasion.time"]	
@@ -21,9 +17,18 @@ simulation.experiment <- function(parameters, ...){
   	n.species.pool <- parameters["n.species.pool"] 						
   	n.invader.pool <- parameters["n.invader.pool"] 			
   	niche.breadth <- parameters["niche.breadth"]     
- 	  evol.model <- ifelse(parameters["evol.model"]==1, "BM", ifelse(parameters["evol.model"]==2, "OU", "delta")) 
+ 	  evol.model <- ifelse(parameters["evol.model"]==1, "BM", ifelse(parameters["evol.model"]==2, "deltaTree", 
+                    ifelse(parameters["evol.model"]==3, "kappaTree", "ouTree"))) 
+    evol.model.param <- parameters["evol.model.param"]
   	min.phyl.signal <- parameters["min.phyl.signal"] 			
-  	# communities
+  	
+    # Null model characteristics    
+    # null.model <- as.character(parameters$null.model)
+    null.model <- ifelse(parameters["null.model"]==1, "taxa.labels", "constrained")
+    suitability <- ifelse(null.model=="constrained", parameters$suitability, FALSE) # TRUE or FALSE to the use of suitability
+    taxa.level <- ifelse(null.model=="constrained", parameters$taxa.level, NA) # Either nothing, a numeric between 0 and 1 (height-type of cutting), an integer ("number of groups"-type of cutting)
+    
+    # communities
   	n.communities <- parameters["n.communities"]			
   	K <- parameters["K"] 			
   	env <- parameters["env"]	
@@ -36,7 +41,7 @@ simulation.experiment <- function(parameters, ...){
     #-------------------------------------
     # Species pool: phylogenetic tree, trait values and invaders in the tree
     #-------------------------------------     
-    pool <- create.pool(n.species.pool, n.invader.pool, evol.model, min.phyl.signal)
+    pool <- create.pool(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param)
     niche.optima <- pool$func$niche_evol
     names(niche.optima) <- pool$func$SpeciesID
     
@@ -76,7 +81,8 @@ simulation.experiment <- function(parameters, ...){
       taxa<-taxa[[1]]#Maybe later, this will be corrected to allow the use of different null models or constraint to evaluate the same communities.
     }
 
-    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat,phy=dist.phy.nat, fun=dist.fun.nat,nrep=n.rep.null.model, null.model = my.null.model,suit=sp.suit,taxa=taxa) # zNULL = NaN when sdNULL=0				  
+    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat, phy=dist.phy.nat, 
+            fun=dist.fun.nat, nrep=n.rep.null.model, null.model = null.model, suit=sp.suit, taxa=taxa) # zNULL = NaN when sdNULL=0				  
     
     # collect results
     output <- list()

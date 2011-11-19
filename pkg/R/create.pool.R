@@ -1,5 +1,5 @@
-create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.signal){
-   	pool <- trait.evolution(branchingRate=0.1, Nleaves=n.species.pool, Ninv=n.invader.pool, which.evolution.model=evol.model, mytheta=1)
+create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param){
+   	pool <- trait.evolution(branchingRate=0.1, Nleaves=n.species.pool, Ninv=n.invader.pool, which.evolution.model=evol.model, extraTreeParam=evol.model.param)
    	niche.optima <- pool[[1]]$niche_evol
   	names(niche.optima) <- pool[[1]]$SpeciesID
 
@@ -12,14 +12,17 @@ create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.sig
         names(niche.optima) <- pool[[1]]$SpeciesID
 	    }
   	}
-    phy.sign<-phylosignal(niche.optima, pool[[2]])
-    pool$K$value<-phy.sign$K
-    pool$K$pv<-phy.sign$PIC.variance.P
+    names(pool) <-  c("func", "phylo")
+    
+    # calculate phylogenetic signal and tree imbalance
+    phy.sign <- phylosignal(niche.optima, pool[[2]])
+    pool$indices$K <- phy.sign$K
+    # pool$indices$p_PIC <- phy.sign$PIC.variance.P
      
-    col.test<-colless.test(as.treeshape(pool[[2]]),alternative="greater")
-    pool$colless.rank<-col.test$p.value
-  	names(pool) <-  c("func", "phylo")
-    # pool$K <- phylosignal(niche.optima, pool[[2]])$K
+    # col.test <- colless.test(as.treeshape(pool[[2]]),alternative="greater", n.mc = 500)
+    pool$indices$Colless <- colless(as.treeshape(pool[[2]]), norm="yule")
+    # pool$indices$p_Colless <- col.test$p.value
+  	
     pool$invader <- list(ID=pool[[1]][pool[[1]]$Inv==1,"SpeciesID"], opt=niche.optima[pool[[1]][pool[[1]]$Inv==1,"SpeciesID"]], distToOpt= abs(env - niche.optima[pool[[1]][pool[[1]]$Inv==1,"SpeciesID"]]))
     return(pool)
 }
