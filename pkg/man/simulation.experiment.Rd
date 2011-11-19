@@ -93,7 +93,7 @@
   # only one line
   single.run <- simulation.experiment(param[1,]) # run the first line
   str(single.run) 
-  
+    
   # more lines 
   # preparation 
   wrapper <- function(a, path){
