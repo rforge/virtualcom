@@ -1,4 +1,4 @@
-div.param.native.obs <- function(spSite, phy, fun,niche.optima,tree){
+div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree){
     spSite <- as.data.frame(spSite)
     if (ncol(spSite)==1){spSite <- as.data.frame(t(spSite))}
     spSite.dummy <- replace(spSite, spSite > 0, 1)
@@ -29,8 +29,8 @@ div.param.native.obs <- function(spSite, phy, fun,niche.optima,tree){
         #PD_pa_mntd.med = mntd_median(spSite, phy),
 				PD_pa_rao.a = t(divc(spSite.rao.dummy, as.dist(phy))),
 				PD_pa_faith = apply(spSite,1,function(x){
-									tree.red<-drop.tip(tree,as.character(tree$tip.label[x==0]))
-									y<-sum(tree.red$edge.length)
+									tree.red <- drop.tip(tree,as.character(tree$tip.label[x==0]))
+									y <- sum(tree.red$edge.length)
 									return(y)}),
 				
 				PD_ab_mpd = mpd(spSite, phy, abundance.weighted=TRUE),

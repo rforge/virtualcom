@@ -11,7 +11,7 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
     #  funNULL <- lapply(1:nrep, function(x) taxaShuffle(fun))
 
     spSiteNULL <- switch(null.model, 
-      		taxa.labels = lapply(1:nrep, function(x){constrained.NM(spSite,taxa=NULL,sp.suit=NULL)}),
+      		taxa.labels = lapply(1:nrep, function(x){constrained.NM(spSite, taxa=NULL, sp.suit=NULL)}),
       		richness = replicate(nrep, randomizeMatrix(spSite, null.model = "richness")),
       		frequency = replicate(nrep, randomizeMatrix(spSite, null.model = "frequency")),
       		independentswap = replicate(nrep, randomizeMatrix(spSite, null.model = "independentswap")),
