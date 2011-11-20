@@ -20,12 +20,12 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
     
     # calculate null model observations            
     tmp <- switch(null.model,
-      		taxa.labels = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
-      		richness = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt, tree=tree)),
-      		frequency = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt, tree=tree)),
-      		independentswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt, tree=tree)),
-      		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
-          constrained = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)))
+      		taxa.labels =     lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
+      		richness =        lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
+      		frequency =       lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
+      		independentswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
+      		trialswap =       lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
+          constrained =     lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)))
     
     # Testing imbalance of local trees
     colless.indices <- apply(spSite, 1, function(x){

@@ -68,7 +68,8 @@
   
   #null model characteristics
   n.rep.null.model <- 10
-  null.model <- 1 # 1:"taxa.labels", 2:"constrained"
+  null.model <- 1 # 1:"taxa.labels", 2:"constrained", 3:"richness", 4:"frequency", 5:"independentswap", 6:"trialswap"
+
   suitability <- FALSE
   taxa.level <- NA
   

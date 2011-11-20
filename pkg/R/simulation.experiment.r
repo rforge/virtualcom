@@ -16,15 +16,24 @@ simulation.experiment <- function(parameters, ...){
     # species pool
   	n.species.pool <- parameters["n.species.pool"] 						
   	n.invader.pool <- parameters["n.invader.pool"] 			
-  	niche.breadth <- parameters["niche.breadth"]     
- 	  evol.model <- ifelse(parameters["evol.model"]==1, "BM", ifelse(parameters["evol.model"]==2, "deltaTree", 
-                    ifelse(parameters["evol.model"]==3, "kappaTree", "ouTree"))) 
+  	niche.breadth <- parameters["niche.breadth"]
+    evol.model <- switch(parameters["evol.model"], 
+      		"1" = "BM",
+      		"2" = "deltaTree",
+      		"3" = "kappaTree",
+      		"4" = "ouTree") 
     evol.model.param <- parameters["evol.model.param"]
   	min.phyl.signal <- parameters["min.phyl.signal"] 			
   	
     # Null model characteristics    
     # null.model <- as.character(parameters$null.model)
-    null.model <- ifelse(parameters["null.model"]==1, "taxa.labels", "constrained")
+    null.model <- switch(parameters["null.model"], 
+      		"1" = "taxa.labels",
+      		"2" = "constrained",
+      		"3" = "richness",
+      		"4" = "frequency",
+      		"5" = "independentswap",
+      		"6" = "trialswap")
     suitability <- ifelse(null.model=="constrained", parameters$suitability, FALSE) # TRUE or FALSE to the use of suitability
     taxa.level <- ifelse(null.model=="constrained", parameters$taxa.level, NA) # Either nothing, a numeric between 0 and 1 (height-type of cutting), an integer ("number of groups"-type of cutting)
     
