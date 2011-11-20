@@ -41,7 +41,7 @@ simulation.experiment <- function(parameters, ...){
     #-------------------------------------
     # Species pool: phylogenetic tree, trait values and invaders in the tree
     #-------------------------------------     
-    pool <- create.pool(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param)
+    pool <- create.pool(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, n.rep.null.model)
     niche.optima <- pool$func$niche_evol
     names(niche.optima) <- pool$func$SpeciesID
     

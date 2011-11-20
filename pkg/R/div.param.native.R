@@ -3,34 +3,34 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
     "trialswap","constrained"),suit=NULL,taxa=NULL){
     # to test: spSite=output$native$communities; phy=Cophi; fun=Cofun; nrep=100; null.model = "taxa.labels"
     # get observed values
-    obs <- sapply(div.param.native.obs(spSite=spSite, phy=phy, fun=fun,niche.optima=niche.opt,tree=tree), function(z) z)
+    obs <- sapply(div.param.native.obs(spSite=spSite, phy=phy, fun=fun, niche.optima=niche.opt, tree=tree), function(z) z)
 
     # prepare randomizations for null models
     null.model <- match.arg(null.model)
-  #  phyNULL <- lapply(1:nrep, function(x) taxaShuffle(phy))
-  #  funNULL <- lapply(1:nrep, function(x) taxaShuffle(fun))
+    #  phyNULL <- lapply(1:nrep, function(x) taxaShuffle(phy))
+    #  funNULL <- lapply(1:nrep, function(x) taxaShuffle(fun))
 
     spSiteNULL <- switch(null.model, 
       		taxa.labels = lapply(1:nrep, function(x){constrained.NM(spSite,taxa=NULL,sp.suit=NULL)}),
-      		richness = replicate(nrep, randomizeMatrix(spSite,null.model = "richness")),
-      		frequency = replicate(nrep, randomizeMatrix(spSite,null.model = "frequency")),
-      		independentswap = replicate(nrep, randomizeMatrix(spSite,null.model = "independentswap")),
-      		trialswap = replicate(nrep, randomizeMatrix(spSite,null.model = "trialswap")),
-          constrained = lapply(1:nrep,function(x){constrained.NM(spSite,taxa,suit)}))
+      		richness = replicate(nrep, randomizeMatrix(spSite, null.model = "richness")),
+      		frequency = replicate(nrep, randomizeMatrix(spSite, null.model = "frequency")),
+      		independentswap = replicate(nrep, randomizeMatrix(spSite, null.model = "independentswap")),
+      		trialswap = replicate(nrep, randomizeMatrix(spSite, null.model = "trialswap")),
+          constrained = lapply(1:nrep,function(x){constrained.NM(spSite, taxa, suit)}))
     
     # calculate null model observations            
     tmp <- switch(null.model,
-      		taxa.labels = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt,tree=tree)),
-      		richness = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt,tree=tree)),
-      		frequency = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt,tree=tree)),
-      		independentswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt,tree=tree)),
-      		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt,tree=tree)),
-          constrained = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt,tree=tree)))
+      		taxa.labels = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
+      		richness = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt, tree=tree)),
+      		frequency = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt, tree=tree)),
+      		independentswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun,niche.optima=niche.opt, tree=tree)),
+      		trialswap = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)),
+          constrained = lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree)))
     
-    #Testing unbalanceness of local trees
-    colless.indices<-apply(spSite,1,function(x){
-      tree.red<-drop.tip(tree,as.character(tree$tip.label[x==0]))
-      col.test<-colless.test(as.treeshape(tree.red),alternative="greater",n.mc=100)$p.value
+    # Testing imbalance of local trees
+    colless.indices <- apply(spSite, 1, function(x){
+      tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
+      col.test <- colless.test.no.print(as.treeshape(tree.red), alternative="greater", n.mc=nrep)$p.value
     })
       
     # get output for null model observations
