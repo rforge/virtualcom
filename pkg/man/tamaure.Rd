@@ -52,6 +52,7 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
 
 \examples{
   niche.optima <- rnorm(200, 100, 20) # create traits of species in species pool
+  # niche.optima <- runif(200, 0, 200)
   niche.optima <- sort(niche.optima) # nicer for the plots
   names(niche.optima) <- seq(niche.optima)
   
@@ -59,7 +60,7 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
   # only environmental filter
   tamaure(beta.env=10, beta.comp=0, beta.abun=0, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=FALSE)
   # only competition filter; there is a border effect!
-  tamaure(beta.env=0, beta.comp=10, beta.abun=0, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=FALSE)
+  tamaure(beta.env=0, beta.comp=10, beta.abun=2, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=FALSE)
   # only abundance weight; increased importance of local abundance changes variance of mpd!; very slow convergence
   tamaure(beta.env=0, beta.comp=0, beta.abun=100, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=FALSE)
 
