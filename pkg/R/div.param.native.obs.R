@@ -1,44 +1,47 @@
-div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree){
+div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat){
+	#  spSite=all.abundances2; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa; indX.nat=indX.nat
+	
     spSite <- as.data.frame(spSite)
     if (ncol(spSite)==1){spSite <- as.data.frame(t(spSite))}
     spSite.dummy <- replace(spSite, spSite > 0, 1)
     
     spSite.rao <- as.data.frame(t(spSite))
     spSite.rao.dummy <- replace(spSite.rao,spSite.rao > 0, 1)
-    return(list(
-				TD_pa_simpson = diversity(spSite.dummy, index="simpson"),
-				TD_pa_shannon = diversity(spSite.dummy, index="shannon"),
-				TD_ab_simpson = diversity(spSite, index="simpson"),
-				TD_ab_shannon = diversity(spSite, index="shannon"),
+    results <- list(
+				if("TD_pa_simpson" %in% indX.nat) {TD_pa_simpson = diversity(spSite.dummy, index="simpson")},
+				if("TD_pa_shannon" %in% indX.nat) {TD_pa_shannon = diversity(spSite.dummy, index="shannon")},
+				if("TD_ab_simpson" %in% indX.nat) {TD_ab_simpson = diversity(spSite, index="simpson")},
+				if("TD_ab_shannon" %in% indX.nat) {TD_ab_shannon = diversity(spSite, index="shannon")},
 				
-				FD_pa_mpd= mpd(spSite, fun, abundance.weighted=FALSE),
-				FD_pa_mntd= mntd(spSite, fun, abundance.weighted=FALSE),
+				if("FD_pa_mpd" %in% indX.nat) {FD_pa_mpd= mpd(spSite, fun, abundance.weighted=FALSE)},
+				if("FD_pa_mntd" %in% indX.nat) {FD_pa_mntd= mntd(spSite, fun, abundance.weighted=FALSE)},
         #FD_pa_mntd.med = mntd_median(spSite, fun),
-				FD_pa_rao = t(divc(spSite.rao.dummy, as.dist(fun))),
-				FD_pa_CWM = apply(spSite.dummy, 1, function(x){weighted.mean(niche.optima, w=x)}),
-				FD_pa_CSD = apply(spSite.dummy, 1, function(x){sqrt(wtd.var(niche.optima, weights=x))}),
+				if("FD_pa_CWM" %in% indX.nat) {FD_pa_CWM = apply(spSite.dummy, 1, function(x){weighted.mean(niche.optima, w=x)})},
+				if("FD_pa_CSD" %in% indX.nat) {FD_pa_CSD = apply(spSite.dummy, 1, function(x){sqrt(wtd.var(niche.optima, weights=x))})},
 				
-				FD_ab_mpd = mpd(spSite, fun, abundance.weighted=TRUE),
-				FD_ab_mntd = mntd(spSite, fun, abundance.weighted=TRUE),
-				FD_ab_rao = t(divc(spSite.rao, as.dist(fun))),
-				FD_ab_CWM = apply(spSite, 1, function(x){weighted.mean(niche.optima,w=x)}),
-				FD_ab_CSD = apply(spSite, 1, function(x){sqrt(wtd.var(niche.optima,weights=x))}),
+				if("FD_ab_mpd" %in% indX.nat) {FD_ab_mpd = mpd(spSite, fun, abundance.weighted=TRUE)},
+				if("FD_ab_mntd" %in% indX.nat) {FD_ab_mntd = mntd(spSite, fun, abundance.weighted=TRUE)},
+				if("FD_ab_CWM" %in% indX.nat) {FD_ab_CWM = apply(spSite, 1, function(x){weighted.mean(niche.optima,w=x)})},
+				if("FD_ab_CSD" %in% indX.nat) {FD_ab_CSD = apply(spSite, 1, function(x){sqrt(wtd.var(niche.optima,weights=x))})},
    		    	
-				PD_pa_mpd = mpd(spSite, phy, abundance.weighted=FALSE),
-				PD_pa_mntd = mntd(spSite, phy, abundance.weighted=FALSE),
+				if("PD_pa_mpd" %in% indX.nat) {PD_pa_mpd = mpd(spSite, phy, abundance.weighted=FALSE)},
+				if("PD_pa_mntd" %in% indX.nat) {PD_pa_mntd = mntd(spSite, phy, abundance.weighted=FALSE)},
         #PD_pa_mntd.med = mntd_median(spSite, phy),
-				PD_pa_rao = t(divc(spSite.rao.dummy, as.dist(phy))),
-				PD_pa_faith = apply(spSite,1,function(x){
+				if("PD_pa_faith" %in% indX.nat) {PD_pa_faith = apply(spSite,1,function(x){
 									tree.red <- drop.tip(tree,as.character(tree$tip.label[x==0]))
 									y <- sum(tree.red$edge.length)
-									return(y)}),
-				PD_pa_colless = apply(spSite, 1, function(x){
+									return(y)})},
+				if("PD_pa_colless" %in% indX.nat) {PD_pa_colless = apply(spSite, 1, function(x){
             tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
-            colless(as.treeshape(tree.red), norm="yule")}),
+            colless(as.treeshape(tree.red), norm="yule")})},
 				
-				PD_ab_mpd = mpd(spSite, phy, abundance.weighted=TRUE),
-				PD_ab_mntd = mntd(spSite, phy, abundance.weighted=TRUE),
-				PD_ab_rao = t(divc(spSite.rao, as.dist(phy)))
-				
-				))
+				if("PD_ab_mpd" %in% indX.nat) {PD_ab_mpd = mpd(spSite, phy, abundance.weighted=TRUE)},
+				if("PD_ab_mntd" %in% indX.nat) {PD_ab_mntd = mntd(spSite, phy, abundance.weighted=TRUE)}
+				)
+
+
+		tt <- sapply(results,function(X){!is.null(X)})
+		results2 <- results[tt]
+		names(results2) <- indX.nat				
+		return(results2)
 }

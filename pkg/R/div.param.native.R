@@ -1,10 +1,10 @@
 div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
     "frequency", "sample.pool", "phylogeny.pool", "independentswap",
-    "trialswap","constrained"),suit=NULL,taxa=NULL){
-    # to test: spSite=all.abundances2; niche.opt=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa
+    "trialswap","constrained"),suit=NULL,taxa=NULL, indX.nat){
+    # to test: spSite=all.abundances2; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa; indX.nat=indX.nat
     # get observed values
-    obs <- sapply(div.param.native.obs(spSite=spSite, phy=phy, fun=fun, niche.optima=niche.opt, tree=tree), function(z) z)
-
+    obs <- sapply(div.param.native.obs(spSite=spSite, phy=phy, fun=fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat), function(z) z)
+	
     # prepare randomizations for null models
     null.model <- match.arg(null.model)
     #  phyNULL <- lapply(1:nrep, function(x) taxaShuffle(phy))
@@ -19,7 +19,7 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
           constrained = lapply(1:nrep,function(x){constrained.NM(spSite, taxa, suit)}))
     
     # calculate null model observations 
-    tmp <- lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree))           
+    tmp <- lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat))           
     
     # Testing imbalance of local trees
     # colless.indices <- apply(spSite, 1, function(x){

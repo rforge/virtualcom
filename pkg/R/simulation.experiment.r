@@ -90,8 +90,10 @@ simulation.experiment <- function(parameters, ...){
       taxa<-taxa[[1]]#Maybe later, this will be corrected to allow the use of different null models or constraint to evaluate the same communities.
     }
 
-    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat, phy=dist.phy.nat, 
-            fun=dist.fun.nat, nrep=n.rep.null.model, null.model = null.model, suit=sp.suit, taxa=taxa) # zNULL = NaN when sdNULL=0				  
+# Choose the indices you want to put in div.param.native:
+	indX.nat <-c("TD_pa_simpson", "TD_pa_shannon", "TD_ab_simpson", "TD_ab_shannon", "FD_pa_mpd", "FD_pa_mntd", "FD_pa_CWM", "FD_pa_CSD", "FD_ab_mpd", "FD_ab_mntd", "FD_ab_CWM", "FD_ab_CSD", "PD_pa_mpd", "PD_pa_mntd", "PD_pa_faith", "PD_ab_mpd", "PD_ab_mntd", "PD_pa_colless")
+	
+    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat, phy=dist.phy.nat, fun=dist.fun.nat, nrep=n.rep.null.model, null.model = null.model, suit=sp.suit, taxa=taxa, indX.nat=indX.nat) # zNULL = NaN when sdNULL=0				  
     
     # collect results
     output <- list()
