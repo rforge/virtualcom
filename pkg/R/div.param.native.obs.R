@@ -15,8 +15,8 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree){
 				FD_pa_mntd= mntd(spSite, fun, abundance.weighted=FALSE),
         #FD_pa_mntd.med = mntd_median(spSite, fun),
 				FD_pa_rao.a = t(divc(spSite.rao.dummy, as.dist(fun))),
-				FD_pa_CWM = apply(spSite.dummy,1, function(x){weighted.mean(niche.optima,w=x)}),
-				FD_pa_CSD = apply(spSite.dummy,1, function(x){sqrt(wtd.var(niche.optima,weights=x))}),
+				FD_pa_CWM = apply(spSite.dummy, 1, function(x){weighted.mean(niche.optima, w=x)}),
+				FD_pa_CSD = apply(spSite.dummy, 1, function(x){sqrt(wtd.var(niche.optima, weights=x))}),
 				
 				FD_ab_mpd = mpd(spSite, fun, abundance.weighted=TRUE),
 				FD_ab_mntd = mntd(spSite, fun, abundance.weighted=TRUE),
@@ -32,6 +32,9 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree){
 									tree.red <- drop.tip(tree,as.character(tree$tip.label[x==0]))
 									y <- sum(tree.red$edge.length)
 									return(y)}),
+				PD_pa_colless = apply(spSite, 1, function(x){
+            tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
+            colless(as.treeshape(tree.red), norm="yule")}),
 				
 				PD_ab_mpd = mpd(spSite, phy, abundance.weighted=TRUE),
 				PD_ab_mntd = mntd(spSite, phy, abundance.weighted=TRUE),
