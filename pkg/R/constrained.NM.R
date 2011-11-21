@@ -60,13 +60,12 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
   	return(site.compo)
 	}
       tab.temp<-cbind(spxp,sp.suit)
-      spxp.rand<-apply(tab.temp,1,function(y){
-        y.split<-split(y,c(taxa,taxa))
+      spxp.rand<-t(apply(tab.temp,1,function(y){
+        y.split<-split(y,f=c(taxa,taxa))
         rand.split<-lapply(y.split,function(y.gr){site.rand(y.gr)})
-        y.rand<-unsplit(rand.split,c(taxa,taxa))
-        return(y.rand)})    
+        y.rand<-unsplit(rand.split,taxa)
+        return(y.rand)}))    
   }
-  spxp
   rownames(spxp.rand)<-rownames(spxp)
   colnames(spxp.rand)<-colnames(spxp)  
   return(spxp.rand)
