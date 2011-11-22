@@ -1,7 +1,7 @@
 div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
     "frequency", "sample.pool", "phylogeny.pool", "independentswap",
-    "trialswap","constrained"),suit=NULL,taxa=NULL, indX.nat){
-    # to test: spSite=all.abundances2; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa; indX.nat=indX.nat
+    "trialswap","constrained"),sp.suit=NULL,taxa=NULL, indX.nat){
+    # to test: spSite=all.abundances2; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; sp.suit=sp.suit; taxa=taxa; indX.nat=indX.nat
     # get observed values
     obs <- sapply(div.param.native.obs(spSite=spSite, phy=phy, fun=fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat), function(z) z)
 	
@@ -16,7 +16,7 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
       		frequency = replicate(nrep, randomizeMatrix(spSite, null.model = "frequency")),
       		independentswap = replicate(nrep, randomizeMatrix(spSite, null.model = "independentswap")),
       		trialswap = replicate(nrep, randomizeMatrix(spSite, null.model = "trialswap")),
-          constrained = lapply(1:nrep,function(x){constrained.NM(spSite, taxa, suit)}))
+          constrained = lapply(1:nrep,function(x){constrained.NM(spSite, taxa, sp.suit)}))
     
     # calculate null model observations 
     tmp <- lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat))           

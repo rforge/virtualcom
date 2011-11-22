@@ -96,7 +96,7 @@ simulation.experiment <- function(parameters, ...){
         "PD_pa_colless", "FD_pa_FEve", "FD_pa_FDis", "FD_pa_faith", "FD_ab_FEve", "FD_ab_FDis", "PD_pa_FEve", "PD_pa_FDis",
         "PD_ab_FEve", "PD_ab_FDis") # never put only 1 index (at least 2), it would change the output format!
 	
-    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat, phy=dist.phy.nat, fun=dist.fun.nat, nrep=n.rep.null.model, null.model = null.model, suit=sp.suit, taxa=taxa, indX.nat=indX.nat) # zNULL = NaN when sdNULL=0				  
+    indices.nat <- div.param.native(spSite=all.abundances2, niche.opt=niche.optima.nat, tree=tree.nat, phy=dist.phy.nat, fun=dist.fun.nat, nrep=n.rep.null.model, null.model = null.model, sp.suit=sp.suit, taxa=taxa, indX.nat=indX.nat) # zNULL = NaN when sdNULL=0				  
     
     # collect results
     output <- list()
