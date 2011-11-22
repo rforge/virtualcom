@@ -1,4 +1,4 @@
-create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, nrep=499){
+create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, nrep=499, env){
    	pool <- trait.evolution(branchingRate=0.1, Nleaves=n.species.pool, Ninv=n.invader.pool, which.evolution.model=evol.model, extraTreeParam=evol.model.param)
    	niche.optima <- pool[[1]]$niche_evol
   	names(niche.optima) <- pool[[1]]$SpeciesID
