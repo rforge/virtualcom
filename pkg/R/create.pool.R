@@ -7,7 +7,7 @@ create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.sig
   	if(!is.na(min.phyl.signal)){
   		## If K < myphySig recreate the tree and traits again until K >= myphySig:
   		while(phylosignal(niche.optima, pool[[2]])$K < min.phyl.signal){
-   	    pool <- trait.evolution(branchingRate=0.1, Nleaves=n.species.pool, Ninv=n.invader.pool, which.evolution.model=evol.model, mytheta=1)
+   	    pool <- trait.evolution(branchingRate=0.1, Nleaves=n.species.pool, Ninv=n.invader.pool, which.evolution.model=evol.model)
  	      niche.optima <- pool[[1]]$niche_evol
         names(niche.optima) <- pool[[1]]$SpeciesID
 	    }
