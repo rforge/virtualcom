@@ -52,6 +52,9 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat)
 				if("PD_pa_colless" %in% indX.nat) {PD_pa_colless = apply(spSite, 1, function(x){
             tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
             colless(as.treeshape(tree.red), norm="yule")})},
+				if("PD_pa_betasplit" %in% indX.nat) {PD_pa_betasplit = apply(spSite, 1, function(x){
+            tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
+            maxlik.betasplit(as.treeshape(tree.red))$max_lik})},           
         if("PD_pa_FEve" %in% indX.nat) {PD_pa_FEve = PD_pa_vill$FEve},
         if("PD_pa_FDis" %in% indX.nat) {PD_pa_FDis = PD_pa_vill$FDis},
 				
