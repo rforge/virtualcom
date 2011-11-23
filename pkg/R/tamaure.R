@@ -5,7 +5,7 @@ tamaure <- function(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0,
   # 1. getting input
   #-------
 	species.count <- length(niche.optima)	# nb of species in the species pool
-	if(is.na(species.pool.abundance))   species.pool.abundance <- rep(1, species.count)
+	if(is.na(species.pool.abundance[1]))   species.pool.abundance <- rep(1, species.count)
 
   #-------
   # 2. Creating the distance matrix from the niche overlap

@@ -12,7 +12,6 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
 #Basic null model : tree tips shuffling
   if (is.null(taxa) & is.null(sp.suit)){
     spxp.rand<-spxp[,sample(1:ncol(spxp))]
-    if(ncol(spxp.rand)==1){spxp.rand<-t(spxp.rand)}
   }
 
 #Habitat scaled null model
@@ -42,8 +41,7 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
       return(y)
       }),taxa)
     spxp.rand<-as.data.frame(spxp[,sp.rand])
-    if(ncol(spxp.rand)==1){spxp.rand<-t(spxp.rand)}
-  }
+    }
 
 #Habitat and Evolutionary scaled null model
   if (!is.null(sp.suit) & !is.null(taxa)){
@@ -66,6 +64,8 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
         y.rand<-unsplit(rand.split,taxa)
         return(y.rand)}))    
   }
+  spxp.rand<-as.data.frame(spxp.rand)
+  if(ncol(spxp.rand)==1){spxp.rand<-t(spxp.rand)}
   rownames(spxp.rand)<-rownames(spxp)
   colnames(spxp.rand)<-colnames(spxp)  
   return(spxp.rand)

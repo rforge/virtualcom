@@ -1,6 +1,6 @@
 div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
     "frequency", "sample.pool", "phylogeny.pool", "independentswap",
-    "trialswap","constrained"),sp.suit=NULL,taxa=NULL, indX.nat){
+    "trialswap","constrained"), sp.suit=NULL, taxa=NULL, indX.nat){
     # to test: spSite=all.abundances2; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; sp.suit=sp.suit; taxa=taxa; indX.nat=indX.nat
     # get observed values
     obs <- sapply(div.param.native.obs(spSite=spSite, phy=phy, fun=fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat), function(z) z)
