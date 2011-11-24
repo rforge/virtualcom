@@ -24,19 +24,3 @@ moving.window<-function(com_land, cell=1, step.length=1){
   
   return(agg_land)
 }
-
-##test
-##single lands
-#agg_land2<-moving.window(com_land_r, cell=2)
-#agg_land3<-moving.window(com_land_r, cell=3)
-#dim(agg_land3)
-#agg_land2[1:2,1:10]
-#agg_land3[1:2,1:10]
-#
-##all aggregated lands
-#side<-length(com_land[com_land$X==1,"X"])
-#agg_lands<-list()
-#for(i in 1:side) agg_lands[[i]]<- moving.window(com_land_r, cell=i) 
-#
-##full landscape
-#rbind(agg_lands[[10]][-2:-3],c(mean(com_land_r$env),colSums(com_land_r[4:103])))
