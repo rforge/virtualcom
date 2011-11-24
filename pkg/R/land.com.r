@@ -23,7 +23,7 @@ land.com<-function(spxenvxcom, land){
   #merge landscape table with com array
   com_land<-matrix(NA, nrow=nrow(coor_env),ncol=dim(spxenvxcom)[2],dimnames=list(1:nrow(coor_env),dimnames(spxenvxcom)[[2]]))
   for (i in 1:nrow(coor_env)){
-  com_land[i,] <- spxenvxcom[spxenvxcom[,1,1]==coor_env[i,1],,sample(1:ncom,1)]
+     com_land[i,] <- spxenvxcom[spxenvxcom[,1,1]==coor_env[i,1],,sample(1:ncom,1)]
   }
   com_land<-data.frame(coor_env,com_land[,-1])
   
