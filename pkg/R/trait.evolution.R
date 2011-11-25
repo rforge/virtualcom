@@ -1,9 +1,12 @@
 trait.evolution <- function(branchingRate=0.1, Nleaves=100, Ninv=1, minOpt=0, maxOpt=100, which.evolution.model="BM", mysigma=.01, extraTreeParam=NA){
 	# to test: branchingRate=0.1; Nleaves=30; Ninv=1; minOpt=0; maxOpt=100; which.evolution.model="BM"; mysigma=.01; extraTreeParam=NA
-
+  # to test: branchingRate=0.1; Nleaves=n.species.pool; Ninv=n.invader.pool; which.evolution.model=evol.model; extraTreeParam=evol.model.param
+  
 	# Brownian motion of tree
-	myTree <- treedata(birthdeath.tree(branchingRate, 0, taxa.stop=(Nleaves + 1)), data.frame(rnorm(Nleaves)), warnings=FALSE)$phy
-	# change naming of tips so that tip labels and tip numbers in edge are the same and are ordered from 1 to Nleaves
+	# myTree <- treedata(birthdeath.tree(branchingRate, 0, taxa.stop=(Nleaves + 1)), data.frame(rnorm(Nleaves)), warnings=FALSE)$phy
+	myTree <- drop.tip(birthdeath.tree(b=branchingRate, d=0, taxa.stop=(Nleaves + 1)), as.character((Nleaves + 1)))
+  
+  # change naming of tips so that tip labels and tip numbers in edge are the same and are ordered from 1 to Nleaves
 	myTree$edge[myTree$edge <= length(myTree$tip.label)] <- 1: length(myTree$tip.label)
 	myTree$tip.label <- 1: length(myTree$tip.label)
 
