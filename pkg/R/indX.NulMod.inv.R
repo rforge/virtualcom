@@ -84,7 +84,7 @@ indX.NulMod.inv <- function(parameters, com_inv, dist.phy, dist.fun, invID, ...)
       	})
    # return(res)
     }
-   }   
+      
   } else stop ("Please contact Mars, no UFO have been recorded")
  }
          
