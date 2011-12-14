@@ -9,7 +9,7 @@ create.pool.invasion <- function(paramPool,...){
   	parameters <- as.numeric(paramPool) 
     names(parameters) <- my.names 
      
-    nreps <- parameters["n.rep.null.model"]
+    nrep <- parameters["n.rep.null.model"]
     n.species.pool <- parameters["n.species.pool"] 						
   	n.invader.pool <- parameters["n.invader.pool"]
     evol.model <- switch(parameters["evol.model"], 
