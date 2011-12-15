@@ -70,7 +70,7 @@ trait.evolution <- function(branchingRate=0.1, Nleaves=100, Ninv=1, minOpt=0, ma
     	# Invaders are underdispersed:
 		  attra$UnderInv <- 0
 		  uu <- as.character(sample(as.character(attra$SpeciesID),1))      
-		  attra[names(sort(cophenetic.phylo(myTree)[,uu])[1:10]),"UnderInv"] <- 1   
+		  attra[names(sort(cophenetic.phylo(myTree)[,uu])[1:Ninv]),"UnderInv"] <- 1   
 	}
 	attra <- attra[order(attra$SpeciesID),]       
 	return(list(attra, myTree))

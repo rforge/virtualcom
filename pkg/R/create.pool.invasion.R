@@ -51,11 +51,19 @@ create.pool.invasion <- function(paramPool,...){
     }
     
     if(n.invader.pool > 1){
-      pool$invader <- list(ID=list(OverInv=pool[[1]][pool[[1]]$OverInv==1,"SpeciesID"],RandInv=pool[[1]][pool[[1]]$RandInv==1,"SpeciesID"],UnderInv=pool[[1]][pool[[1]]$UnderInv==1,"SpeciesID"]),
-                                  opt=list(OverInv=niche.optima[pool[[1]][pool[[1]]$OverInv==1,"SpeciesID"]],RandInv=niche.optima[pool[[1]][pool[[1]]$RandInv==1,"SpeciesID"]],UnderInv=niche.optima[pool[[1]][pool[[1]]$UnderInv==1,"SpeciesID"]]), 
-                                  distToOpt= NA)
+      pool$invader <- list(	ID=list(OverInv=pool[[1]][pool[[1]]$OverInv==1,"SpeciesID"],RandInv=pool[[1]][pool[[1]]$RandInv==1,"SpeciesID"],UnderInv=pool[[1]][pool[[1]]$UnderInv==1,"SpeciesID"]), 
+      						opt=list(OverInv=niche.optima[pool[[1]][pool[[1]]$OverInv==1,"SpeciesID"]],RandInv=niche.optima[pool[[1]][pool[[1]]$RandInv==1,"SpeciesID"]],UnderInv=niche.optima[pool[[1]][pool[[1]]$UnderInv==1,"SpeciesID"]]), 
+      						distToOpt= NA)
     }
     pool$parameters <- parameters
     
     return(pool)
 }
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-simulation.experiment.WithPool <- function(parameters, ...){
+simulation.experiment.WithPool <- function(parameters, pools, ...){
   	# to test: parameters=as.numeric(param.com[1,]); names(parameters) <- names(param.com[1,]); 
   
     #-------------------------------------
