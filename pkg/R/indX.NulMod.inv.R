@@ -2,6 +2,7 @@ indX.NulMod.inv <- function(parameters, com_inv, dist.phy, dist.fun, invID, ...)
   # to test: parameters <- paramNull[1,]
  
   null.mod <- parameters["null.mod"]
+  invdOUT <-  parameters["invaderOut"]
   
   if (sum(com_inv[, invID], na.rm=TRUE) !=0 ){ 	# if there was at least one invasion
   	
@@ -55,7 +56,7 @@ indX.NulMod.inv <- function(parameters, com_inv, dist.phy, dist.fun, invID, ...)
     	 	tabl2 <- as.data.frame(t(sapply(tabl,function(x){x[1,]})))
     	 	
     	 	# Identify the sites that should be selected:
-     		out_sites <- as.data.frame(cbind(ifelse(t(tmp[x,])==0,0,1),exoID=ifelse(row.names(out_sites)%in% invID,"I","N"),siteID=rep(x,dim(tabl2)[1]),tabl2))
+     		out_sites <- as.data.frame(cbind(ifelse(t(tmp[x,])==0,0,1),exoID=ifelse(row.names(tabl2)%in% invID,"I","N"),siteID=rep(x,dim(tabl2)[1]),tabl2))
      		names(out_sites)[1] <- "PresAbs"
      		if(null.mod == 3){out_sites$weight <- ifelse(out_sites[,1]==1 & out_sites[,2]=="I" | out_sites[,1]==0 & out_sites[,2]=="N",1,0)}		# for inv_nat
      		# if(null.mod == 4){out_sites$weight <- ifelse(out_sites[,1]==1 & out_sites[,2]=="I" | out_sites[,1]==0 & out_sites[,2]=="N",1,0)}		# for constrained inv_nat
