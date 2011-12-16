@@ -12,12 +12,12 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
     #  funNULL <- lapply(1:nrep, function(x) taxaShuffle(fun))
 
     spSiteNULL <- switch(null.model, 
-      		taxa.labels = lapply(1:nrep, function(x){constrained.NM(spSite, taxa=NULL, sp.suit=NULL)}),
+      		taxa.labels = replicate(nrep,constrained.NM(spSite, taxa=NULL, sp.suit=NULL)),
       		richness = replicate(nrep, randomizeMatrix(spSite, null.model = "richness")),
       		frequency = replicate(nrep, randomizeMatrix(spSite, null.model = "frequency")),
       		independentswap = replicate(nrep, randomizeMatrix(spSite, null.model = "independentswap")),
       		trialswap = replicate(nrep, randomizeMatrix(spSite, null.model = "trialswap")),
-          constrained = lapply(1:nrep,function(x){constrained.NM(spSite, taxa, sp.suit)}))
+          constrained = replicate(nrep,constrained.NM(spSite, taxa, sp.suit)))
     
     # calculate null model observations 
     tmp <- lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat))           

@@ -1,12 +1,12 @@
 constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
-  spxp<-as.data.frame(spxp)
+  spxp<-as.matrix(spxp)
   if (ncol(spxp)==1){spxp<-t(spxp)}
   if (!is.null(taxa)){if (ncol(spxp)!=length(taxa)){stop("Non convenient taxa dimension ")}}
   if (!is.null(sp.suit)){
     if (any(dim(sp.suit)!=dim(spxp))){
       stop("Non convenient sp.suit dimensions")
     }
-    sp.suit<-as.data.frame(sp.suit)
+    sp.suit<-as.matrix(sp.suit)
     if (ncol(sp.suit)==1){sp.suit<-t(sp.suit)}}
 
 #Basic null model : tree tips shuffling
@@ -20,7 +20,7 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
   		n<-length(site.suitability)/2
   		x<-site.suitability[1:n]
   		site.suit<-site.suitability[(n+1):(2*n)]
-  		site.suit[site.suit==0]<-min(site.suit)*0.0001
+  		site.suit[site.suit==0]<-min(site.suit[site.suit!=0])*0.0001
   		site.compo<-rep(0,n)
   		values.pos<-x[x>0]
   		if (length(values.pos)>0){
@@ -49,7 +49,9 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
   		n<-length(site.suitability)/2
   		x<-site.suitability[1:n]
   		site.suit<-site.suitability[(n+1):(2*n)]
-  		site.suit[site.suit==0]<-min(site.suit)*0.0001
+		if (any(site.suit!=0)){
+  		site.suit[site.suit==0]<-min(site.suit[site.suit!=0])*0.0001
+		}else{site.suit<-site.suit+1}
   		site.compo<-rep(0,n)
   		values.pos<-x[x>0]
   		if (length(values.pos)>0){
@@ -64,9 +66,10 @@ constrained.NM<-function(spxp,taxa=NULL,sp.suit=NULL){
         y.rand<-unsplit(rand.split,taxa)
         return(y.rand)}))    
   }
-  spxp.rand<-as.data.frame(spxp.rand)
+  spxp.rand<-as.matrix(spxp.rand)
   if(ncol(spxp.rand)==1){spxp.rand<-t(spxp.rand)}
-  rownames(spxp.rand)<-rownames(spxp)
-  colnames(spxp.rand)<-colnames(spxp)  
+#  rownames(spxp.rand)<-rownames(spxp)
+#  colnames(spxp.rand)<-colnames(spxp)
+  dimnames(spxp.rand)<-list(rownames(spxp),colnames(spxp))
   return(spxp.rand)
 }
