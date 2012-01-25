@@ -91,10 +91,10 @@ indX.NulMod.inv <- function(parameters, com_inv, dist.phy, dist.fun, invID, ...)
 			all_sites$fun_MDWNC <- as.numeric(as.character(all_sites$fun_MDWNC))
 			all_sites$fun_MDMAS <- as.numeric(as.character(all_sites$fun_MDMAS))
 
- 	 	 	all_sites$fun_MDNCsq <- all_sites$fun_MDNC^2
-	 	  	all_sites$fun_MDNNsq <- all_sites$fun_MDNN^2
-	 	  	all_sites$fun_MDWNCsq <- all_sites$fun_MDWNC^2
-	 	  	all_sites$fun_MDMASsq <- all_sites$fun_MDMAS^2
+ 	 	 	all_sites$fun_MDNCsq <- as.numeric(as.character(all_sites$fun_MDNC^2))
+	 	  	all_sites$fun_MDNNsq <- as.numeric(as.character(all_sites$fun_MDNN^2))
+	 	  	all_sites$fun_MDWNCsq <- as.numeric(as.character(all_sites$fun_MDWNC^2))
+	 	  	all_sites$fun_MDMASsq <- as.numeric(as.character(all_sites$fun_MDMAS^2))
     
     		mods <- sapply(c("fun_MDNC", "fun_MDNN", "fun_MDWNC", "fun_MDMAS"),function(i){
 				all_sites$aa <- eval(parse(text=paste("all_sites$",i,sep="")))/100
