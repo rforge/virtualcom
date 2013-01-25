@@ -1,7 +1,11 @@
-div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.model = c("taxa.labels", "richness",
-    "frequency", "sample.pool", "phylogeny.pool", "independentswap",
-    "trialswap","constrained"), sp.suit=NULL, taxa=NULL, indX.nat){
-    # to test: spSite=all.abundances2; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; sp.suit=sp.suit; taxa=taxa; indX.nat=indX.nat
+div.param.native <- function(spSite, niche.opt, tree, phy, fun, nrep=100, 
+					null.model = c("taxa.labels", "richness", "frequency", "sample.pool", 
+					"phylogeny.pool", "independentswap", "trialswap","constrained"), 
+					sp.suit=NULL, taxa=NULL, indX.nat){
+						
+    # to test: spSite=all.abundances2; niche.opt=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat;
+    #  fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; sp.suit=sp.suit; taxa=taxa; indX.nat=indX.nat
+
     # get observed values
     obs <- sapply(div.param.native.obs(spSite=spSite, phy=phy, fun=fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat), function(z) z)
     if (is.null(nrow(obs))){obs<-t(as.data.frame(obs))}
@@ -20,7 +24,7 @@ div.param.native <- function(spSite, niche.opt, tree,phy, fun, nrep=100, null.mo
           constrained = replicate(nrep,constrained.NM(spSite, taxa, sp.suit)))
     
     # calculate null model observations 
-    tmp <- lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[[x]], phy, fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat))           
+    tmp <- lapply(1:nrep, function(x) div.param.native.obs(spSiteNULL[,,x], phy, fun, niche.optima=niche.opt, tree=tree, indX.nat=indX.nat))           
     
     # Testing imbalance of local trees
     # colless.indices <- apply(spSite, 1, function(x){
