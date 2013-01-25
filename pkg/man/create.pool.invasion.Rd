@@ -1,22 +1,24 @@
-\name{create.pool.invasions}
-\alias{create.pool.invasions}
+\name{create.pool.invasion}
+\alias{create.pool.invasion}
 
 \title{ Create several species pools containing more than 1 invader }
-\description{
-  Creates several species pools containing several invaders
-}
-\usage{
-create.pool.invasions(paramPool, ...)
 
+\description{
+  Create several species pools containing several invaders.
+}
+
+\usage{
+create.pool.invasion(n.species.pool, n.invader.pool, env, evol.model, evol.model.param, min.phyl.signal, nreps, ...)
 }
 
 \arguments{
   \item{n.species.pool}{ number of species in the species pool }
   \item{n.invader.pool}{ number of invaders in the species pool }
-  \item{evol.model}{ hoice of evolutionary model which determines phylogenetic signal; 1: BM, 2: OU, 3: delta   }
+  \item{env}{ trait value of the phylogenetic root, used when evolving the trait on the phylogeny }
+  \item{evol.model}{ choice of evolutionary model which determines phylogenetic signal; 1: BM, 2: delta, 3:Kappa, 4: OU }
+  \item{evol.model.param}{ only when evol.model different from brownian motion. It is the alpha parameter }
   \item{min.phyl.signal}{ minimal phylogenetic signal }
-  \item{evol.model.param}{ For evol.model different from brownian motion }
-  \item{n.rep.null.model}{ number of repetition for the null models }
+  \item{n.rep}{ number of repetition for the null models }
   }
 
 
@@ -24,7 +26,7 @@ create.pool.invasions(paramPool, ...)
   List of objects: 
   \item{func}{ Functional traits for each species of the pool }
   \item{phylo}{ Phylogenetic tree of the species pool  }
-  \item{indices}{ indices of the phylogenetic signal } 
+  \item{indices}{ Indices of the phylogenetic signal } 
   \item{invader}{ List of the invader's identities and trait values } 
   \item{parameters}{ The parameters used for creating the species pool } 
   }
