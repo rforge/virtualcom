@@ -1,4 +1,4 @@
-################################################################################
+###############################################################################
 # distribute communities on landscapes
 # spxenvxcom: array of env values by species by communities
 # land: landscape of environmental values (matrix)
