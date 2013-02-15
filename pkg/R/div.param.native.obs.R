@@ -1,5 +1,5 @@
 div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat){
-	#  spSite=all.abundances2; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa; indX.nat=indX.nat
+	#  spSite=spSiteNat[1:10,]; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa; indX.nat=indX.nat
 	
     spSite <- as.data.frame(spSite)
     if (ncol(spSite)==1){spSite <- as.data.frame(t(spSite))}
@@ -23,25 +23,25 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat)
     }
     
     results <- list()
-		if("TD_pa_simpson" %in% indX.nat) {results$TD_pa_simpson = diversity(spSite.dummy, index="simpson")}
-		if("TD_pa_shannon" %in% indX.nat) {results$TD_pa_shannon = diversity(spSite.dummy, index="shannon")}
+		if("TD_pa_simpson" %in% indX.nat) {results$TD_pa_simpson = rowSums(spSite.dummy)}
+		if("TD_pa_shannon" %in% indX.nat) {results$TD_pa_shannon = rowSums(spSite.dummy)}
 		if("TD_ab_simpson" %in% indX.nat) {results$TD_ab_simpson = diversity(spSite, index="simpson")}
 		if("TD_ab_shannon" %in% indX.nat) {results$TD_ab_shannon = diversity(spSite, index="shannon")}
 		
 		if("FD_pa_mpd" %in% indX.nat) {results$FD_pa_mpd= mpd(spSite, fun, abundance.weighted=FALSE)}
 		if("FD_pa_mntd" %in% indX.nat) {results$FD_pa_mntd= mntd(spSite, fun, abundance.weighted=FALSE)}
-    if("FD_pa_CWM" %in% indX.nat) {results$FD_pa_CWM = apply(spSite.dummy, 1, function(x){weighted.mean(niche.optima, w=x)})}
+    	if("FD_pa_CWM" %in% indX.nat) {results$FD_pa_CWM = apply(spSite.dummy, 1, function(x){weighted.mean(niche.optima, w=x)})}
 		if("FD_pa_CSD" %in% indX.nat) {results$FD_pa_CSD = apply(spSite.dummy, 1, function(x){sqrt(wtd.var(niche.optima, weights=x))})}
-    if("FD_pa_FEve" %in% indX.nat) {results$FD_pa_FEve = FD_pa_vill$FEve}
-    if("FD_pa_FDis" %in% indX.nat) {results$FD_pa_FDis = FD_pa_vill$FDis}
-    if("FD_pa_faith" %in% indX.nat) {results$FD_pa_faith = treedive(spSite, hclust(as.dist(fun)))}				
+    	if("FD_pa_FEve" %in% indX.nat) {results$FD_pa_FEve = FD_pa_vill$FEve}
+    	if("FD_pa_FDis" %in% indX.nat) {results$FD_pa_FDis = FD_pa_vill$FDis}
+   	 	if("FD_pa_faith" %in% indX.nat) {results$FD_pa_faith = treedive(spSite, hclust(as.dist(fun)))}				
 		
 		if("FD_ab_mpd" %in% indX.nat) {results$FD_ab_mpd = mpd(spSite, fun, abundance.weighted=TRUE)}
 		if("FD_ab_mntd" %in% indX.nat) {results$FD_ab_mntd = mntd(spSite, fun, abundance.weighted=TRUE)}
 		if("FD_ab_CWM" %in% indX.nat) {results$FD_ab_CWM = apply(spSite, 1, function(x){weighted.mean(niche.optima,w=x)})}
 		if("FD_ab_CSD" %in% indX.nat) {results$FD_ab_CSD = apply(spSite, 1, function(x){sqrt(wtd.var(niche.optima,weights=x))})}
 		if("FD_ab_FEve" %in% indX.nat) {results$FD_ab_FEve = FD_ab_vill$FEve}
-    if("FD_ab_FDis" %in% indX.nat) {results$FD_ab_FDis = FD_ab_vill$FDis}
+  		if("FD_ab_FDis" %in% indX.nat) {results$FD_ab_FDis = FD_ab_vill$FDis}
 
 	    	
 		if("PD_pa_mpd" %in% indX.nat) {results$PD_pa_mpd = mpd(spSite, phy, abundance.weighted=FALSE)}
@@ -55,13 +55,13 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat)
 		if("PD_pa_betasplit" %in% indX.nat) {results$PD_pa_betasplit = apply(spSite, 1, function(x){
         tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
         maxlik.betasplit(as.treeshape(tree.red))$max_lik})}           
-    if("PD_pa_FEve" %in% indX.nat) {results$PD_pa_FEve = PD_pa_vill$FEve}
-    if("PD_pa_FDis" %in% indX.nat) {results$PD_pa_FDis = PD_pa_vill$FDis}
+    	if("PD_pa_FEve" %in% indX.nat) {results$PD_pa_FEve = PD_pa_vill$FEve}
+   		if("PD_pa_FDis" %in% indX.nat) {results$PD_pa_FDis = PD_pa_vill$FDis}
 		
 		if("PD_ab_mpd" %in% indX.nat) {results$PD_ab_mpd = mpd(spSite, phy, abundance.weighted=TRUE)}
 		if("PD_ab_mntd" %in% indX.nat) {results$PD_ab_mntd = mntd(spSite, phy, abundance.weighted=TRUE)}
 		if("PD_ab_FEve" %in% indX.nat) {results$PD_ab_FEve = PD_ab_vill$FEve}
-    if("PD_ab_FDis" %in% indX.nat) {results$PD_ab_FDis = PD_ab_vill$FDis}
+    	if("PD_ab_FDis" %in% indX.nat) {results$PD_ab_FDis = PD_ab_vill$FDis}
 
 
 
