@@ -1,11 +1,10 @@
 div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat){
 	#  spSite=spSiteNat[1:10,]; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa; indX.nat=indX.nat
-	
+	# spSite=spSiteNULL[,,1]; niche.optima=niche.opt; tree=tree; indX.nat=indX.nat
     spSite <- as.data.frame(spSite)
     if (ncol(spSite)==1){spSite <- as.data.frame(t(spSite))}
     spSite.dummy <- replace(spSite, spSite > 0, 1)
-    
-    spIn <- which(colSums(spSite) != 0)
+    spIn <- colnames(spSite)[colSums(spSite) != 0]
     fun.NoZero <- fun[spIn, spIn]
     phy.NoZero <- phy[spIn, spIn]
     spSite.NoZero <- spSite[, spIn]
@@ -49,9 +48,9 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat)
 		if("PD_pa_faith" %in% indX.nat) {results$PD_pa_faith = apply(spSite, 1, function(x){
 							tree.red <- drop.tip(tree,as.character(tree$tip.label[x==0]))
 							sum(tree.red$edge.length)})}
-		if("PD_pa_colless" %in% indX.nat) {results$PD_pa_colless = apply(spSite, 1, function(x){
-        tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
-        colless(as.treeshape(tree.red), norm="yule")})}
+		# if("PD_pa_colless" %in% indX.nat & !any(rowSums(spSite != 0) <= 2)) {results$PD_pa_colless = apply(spSite, 1, function(x){
+        # tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
+        # colless(as.treeshape(tree.red), norm="yule")})}
 		if("PD_pa_betasplit" %in% indX.nat) {results$PD_pa_betasplit = apply(spSite, 1, function(x){
         tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
         maxlik.betasplit(as.treeshape(tree.red))$max_lik})}           

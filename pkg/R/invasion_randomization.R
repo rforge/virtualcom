@@ -1,11 +1,11 @@
-#native_inv: within site replace invader with another species not present in the site
+# shuffle species identities
 
-invasion_randomization <- function(samp, dis, inva){
-        # select invaded sites
-        natives <- colnames(samp)[!colnames(samp) %in% inva]
-        new.invader <- sample(natives, 1)
-        new.samp <- samp
-        new.samp[,inva] <- 0
-        new.samp[, new.invader] <- samp[,inva]
-        return(list(samp=new.samp, inv=new.invader))
+invasion_randomization <- function(samp, inva){
+	# samp=spSite ; inva=invad
+	
+	# identify the non successful natives
+	new.samp <- samp[,sample(1:ncol(samp))] 
+	colnames(new.samp) <- colnames(samp)
+	new.samp
+	return(list(samp=new.samp, inv=inva))
 }

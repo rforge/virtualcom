@@ -1,10 +1,8 @@
 trait.evolution <- function(branchingRate=0.1, Nleaves=100, Ninv=1, minOpt=0, maxOpt=100, which.evolution.model="BM", mysigma=.01, extraTreeParam=NA){
-	# to test: branchingRate=0.1; Nleaves=30; Ninv=1; minOpt=0; maxOpt=100; which.evolution.model="BM"; mysigma=.01; extraTreeParam=NA
   # to test: branchingRate=0.1; Nleaves=n.species.pool; Ninv=n.invader.pool; which.evolution.model=evol.model; extraTreeParam=evol.model.param
   
 	# Brownian motion of tree
-	# myTree <- treedata(birthdeath.tree(branchingRate, 0, taxa.stop=(Nleaves + 1)), data.frame(rnorm(Nleaves)), warnings=FALSE)$phy
-	myTree <- drop.tip(birthdeath.tree(b=branchingRate, d=0, taxa.stop=(Nleaves + 1)), as.character((Nleaves + 1)))
+	myTree <- sim.bdtree(branchingRate, 0, stop="taxa", n=Nleaves)
   
   # change naming of tips so that tip labels and tip numbers in edge are the same and are ordered from 1 to Nleaves
 	myTree$edge[myTree$edge <= length(myTree$tip.label)] <- 1: length(myTree$tip.label)
@@ -13,29 +11,32 @@ trait.evolution <- function(branchingRate=0.1, Nleaves=100, Ninv=1, minOpt=0, ma
  	# different models of trait evolution  
    if (which.evolution.model == "BM"){
        myTrait <- rTraitCont(myTree, model=which.evolution.model, sigma=mysigma,  root.value=0)
-       if (!is.na(extraTreeParam)){
-          traitA <- sample(myTrait)
-          names(traitA) <- 1:length(traitA)
-          myTrait <- sqrt(extraTreeParam) * myTrait + sqrt(1-extraTreeParam) * traitA
-      }
    }
    if (which.evolution.model == "deltaTree"){
-       myTree_tmp <- deltaTree(phy=myTree, delta=extraTreeParam, rescale = T)
+       myTree_tmp <- rescale(myTree, model="delta", extraTreeParam)
+       # to capture the cases where rescale transformes branch lengths into NA or zero or negative values 
+       if(any(is.na(myTree_tmp$edge.length))){
+       	  which <- which(is.na(myTree_tmp$edge.length))
+       	  myTree_tmp$edge.length[which] <-  min(myTree_tmp$edge.length, na.rm=T)
+          myTree_tmp$edge.length[-which] <- myTree_tmp$edge.length[-which] + myTree_tmp$edge.length[which]
+       }
+       # if(min(myTree_tmp$edge.length) < 0) myTree_tmp$edge.length <- myTree_tmp$edge.lengt - min(myTree_tmp$edge.length)
+       # if(min(myTree_tmp$edge.length) < 0) myTree_tmp$edge.length <- myTree_tmp$edge.lengt + min(myTree_tmp$edge.length[myTree_tmp$edge.length>0])
        myTrait <- rTraitCont(myTree_tmp, model="BM", sigma=mysigma,  root.value=0)
        names(myTrait) <- 1:length(myTrait)
    }
    if (which.evolution.model == "lambdaTree"){
-       myTree_tmp <- lambdaTree(phy=myTree, lambda=extraTreeParam)
+       myTree_tmp <- rescale(myTree, model="lambda", extraTreeParam)
        myTrait <- rTraitCont(myTree_tmp, model="BM", sigma=mysigma,  root.value=0)
        names(myTrait) <- 1:length(myTrait)
    }
    if (which.evolution.model == "kappaTree"){
-       myTree_tmp <- kappaTree(phy=myTree, kappa=extraTreeParam)
+       myTree_tmp <- rescale(myTree, model="kappa", extraTreeParam)
        myTrait <- rTraitCont(myTree_tmp, model="BM", sigma=mysigma,  root.value=0)
        names(myTrait) <- 1:length(myTrait)
    }
    if (which.evolution.model == "ouTree"){
-       myTree_tmp <- ouTree(phy=myTree, alpha=extraTreeParam)
+       myTree_tmp <- rescale(myTree, model="OU", extraTreeParam)
        myTrait <- rTraitCont(myTree_tmp, model="BM", sigma=mysigma,  root.value=0)
        names(myTrait) <- 1:length(myTrait)
    }   
@@ -51,8 +52,8 @@ trait.evolution <- function(branchingRate=0.1, Nleaves=100, Ninv=1, minOpt=0, ma
 
 	 #  Identifying the invaders in the tree:
 	 if(Ninv==1){
-      attra$Inv <- 0
-      attra$Inv[sample(1:nrow(attra),1)] <- 1	
+      attra$RandInv <- 0
+      attra$RandInv[sample(1:nrow(attra),1)] <- 1	
 	 }
 	 if(Ninv > 1){
 	  	# Invaders are overdispersed:

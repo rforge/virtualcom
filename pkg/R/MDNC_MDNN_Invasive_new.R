@@ -44,59 +44,49 @@
 
 
 
-MDNC_MDNN_Invasive_new <- function (samp, dis, inva, invaderOut=FALSE) 
-{
+MDNC_MDNN_Invasive_new <- function (samp, dis, inva, invaderOut=FALSE) {
+	# Function which estimate Mean phylogenetic/Functional distance of one given introduced species (sp) to the native comm and 
+	# Phylogenetic/Functional distance of one given introduced species (sp) to its nearest native relative
+	# samp=ispSite ; dis=iphy ; inva=imyinva
 
-#########################################	
-#Function which estimate Mean phylogenetic/Functional distance of one given introduced species (sp) to the native comm and 
-#Phylogenetic/Functional distance of one given introduced species (sp) to its nearest native relative
 	mdnc_fun <- function(samp_temp, dis, inva, sp, invaderOut){
 		N <- dim(samp_temp)[1]	#number of plots
 		mdnc_sp <- mdnn_sp <- mdwnc_sp <- mdmas_sp <- numeric(N)
 		for (i in 1:N) {
-			#remove species not in the give community
+			# remove species not in the given community
         		sppInSample <- names(samp_temp[i, samp_temp[i, ] > 0]) 
-        		#remove invasive species (species that should not be accounted for)
-        		if(invaderOut==TRUE) sppInSample <- c(sp, sppInSample[-which(sppInSample %in% intersect(sppInSample, inva))]) #CHANGED: introduced variable invaderOut           
-        		if (length(sppInSample) > 1) {
-				#extract the distance between species "sp" and the remaining community        	
-  		        sample.dis <- dis[sppInSample[-which(sppInSample==sp)], sp]
+        		# remove invasive species (species that should not be accounted for)
+			if(invaderOut==TRUE) sppInSample <- c(sp, sppInSample[-which(sppInSample %in% intersect(sppInSample, inva))]) #CHANGED: introduced variable invaderOut           
+			if (length(sppInSample) > 1) {
+				#extract the distance between species "sp" and the remaining community
+				sample.dis <- dis[sppInSample[-which(sppInSample==sp)], sp]
           		#Distance to the nearest species
-              mdnn_sp[i] <-min(sample.dis)
+				mdnn_sp[i] <-min(sample.dis)
            		#Distance the unweighted mean community
-              mdnc_sp[i] <- mean(sample.dis)                                                     
-              #distance to the weighted mean community
-              mdwnc_sp[i] <- w.mean(sample.dis, samp_temp[i,sppInSample[-which(sppInSample==sp)]])
-              #distance to the most abundant species
-              mdmas_sp[i] <- most.abdt(sample.dis, samp_temp[i,sppInSample[-which(sppInSample==sp)]])                              
+				mdnc_sp[i] <- mean(sample.dis)                                                     
+				#distance to the weighted mean community
+				mdwnc_sp[i] <- w.mean(sample.dis, samp_temp[i, sppInSample[-which(sppInSample==sp)]])
+				#distance to the most abundant species
+				mdmas_sp[i] <- most.abdt(sample.dis, samp_temp[i,sppInSample[-which(sppInSample==sp)]])                              
         		}
-        		else {
-            		mdnn_sp[i] <-  mdnc_sp[i] <- mdwnc_sp[i] <- mdmas_sp[i] <- 0				# CHANGED: added [i] for mdwnc_sp and mdmas_sp as well
-        		}
-      	}
-      res=list()
-      res$mdnn_sp=mdnn_sp
-      res$mdnc_sp=mdnc_sp
-      res$mdwnc_sp=mdwnc_sp
-      res$mdmas_sp=mdmas_sp
-      res		
+        		else {mdnn_sp[i] <-  mdnc_sp[i] <- mdwnc_sp[i] <- mdmas_sp[i] <- 0 }
+		}
+		res=list()
+		res$mdnn_sp=mdnn_sp
+		res$mdnc_sp=mdnc_sp
+		res$mdwnc_sp=mdwnc_sp
+		res$mdmas_sp=mdmas_sp
+		res		
 	}
-
-
-#Estime la moyenne pondérée par l'abondance de chaque espèce dans la communauté	
-w.mean<-function(data, abun){
-  res<-sum(data*(abun/sum(abun)))
-  return(res)
-}
-
-most.abdt<-function(data, abun){
-  res<-mean(data[abun==max(abun)])
-}
+	
+	# Estimate the mean weighted by the abundance of each species in the community
+	w.mean <- function(data, abun){ res <- sum(data*(abun/sum(abun))) ; return(res) }
+	most.abdt <- function(data, abun){	 res <- mean(data[abun==max(abun)]) }
 	
 ##########################################
 	
-	MDNC <- MDNN <- MDWNC <- MDMAS <- as.data.frame(matrix(NA, ncol=length(inva), nrow=nrow(samp), dimnames=list(rownames(samp), inva))) # CHANGED: default was 0 before
-  samp = as.data.frame(samp)
+	MDNC <- MDNN <- MDWNC <- MDMAS <- as.data.frame(matrix(NA, ncol=length(inva), nrow=nrow(samp), dimnames=list(rownames(samp), inva))) 
+	samp = as.data.frame(samp)
 	for(j in 1:length(inva)){
 		samp_temp <- samp[eval(parse(text=paste("samp$", inva[j], ">0", sep=""))),]
 		if(nrow(samp_temp)==0) stop(paste("The species", inva[j], "does not appear in any community", sep=" "))
