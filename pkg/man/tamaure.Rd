@@ -51,7 +51,7 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
 
 \examples{
 # create species pool
-pool <- create.pool(n.species.pool=500, n.invader.pool=1, evol.model="deltaTree", min.phyl.signal=NA, evol.model.param=0.1, nrep=1, env=50)   
+pool <- create.pool(n.species.pool=500, n.invader.pool=1, evol.model="deltaTree", min.phyl.signal=NA, evol.model.param=0.1, nrep=1)   
 niche.optima <- pool$func$niche_evol
 names(niche.optima) <- pool$func$SpeciesID
 

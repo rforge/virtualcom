@@ -47,7 +47,7 @@ trait.evolution <- function(branchingRate=0.1, Nleaves=100, Ninv=1, minOpt=0, ma
    # rescale traits to make them comparable among different trait evolution models
  	 myTrait <- logist(myTrait, lower=minOpt, upper=maxOpt)
  	 opt <- seq(minOpt, maxOpt, length.out=Nleaves) # optimum value for all species (equal spacing between the species)
- 	 attra <- as.data.frame(cbind(SpeciesID = myTree$tip.label, niche_evol=myTrait, niche_equi=opt[as.vector(rank(myTrait))]))  
+ 	 attra <- as.data.frame(cbind(SpeciesID = myTree$tip.label, niche_evol=myTrait))  
  	 rownames(attra) <- attra$SpeciesID
 
 	 #  Identifying the invaders in the tree:

@@ -15,7 +15,7 @@ create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.ph
   \item{n.species.pool}{ number of species (natives and invaders) }
   \item{n.invader.pool}{ number of invaders }
   \item{evol.model}{ choice of evolutionary model which determines phylogenetic signal, see details  }
-  \item{evol.model.param}{ when evol.model is different from Brownian motion, see details }
+  \item{evol.model.param}{ applies only if evol.model is different from Brownian motion, see details }
   \item{min.phyl.signal}{ minimal phylogenetic signal }
   \item{n.rep}{ number of repetition for the null models }
   }
@@ -23,16 +23,15 @@ create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.ph
 
 \value{
   List of objects: 
-  \item{func}{ Functional traits for each species of the pool }
-  \item{phylo}{ Phylogenetic tree of the species pool  }
-  \item{indices}{ Indices of the phylogenetic signal } 
-  \item{invader}{ List of the invader's identities and trait values } 
-  \item{parameters}{ The parameters used for creating the species pool } 
+  \item{func}{ evolved functional traits for each species of the pool }
+  \item{phylo}{ phylogenetic tree of the species pool  }
+  \item{indices}{ results of phylogenetic signal and colless test for phylogenetic tree shape } 
+  \item{invader}{ list of the invader's identities and trait values } 
+  \item{parameters}{ the parameters used for creating the species pool } 
   }
 
 \details{
-   The different evolutionary models (argument evol.mod) are based on tree transformations see (\code{\link{rescale} for more details): 1= 	
-	"1" = BM (Brownian motion), "2" = deltaTree, "3" = kappaTree, "4" = ouTree, 5 = "lambdaTree". The tree transformation can be parameterized using the argument evol.model.param. 
+   The different evolutionary models (argument evol.mod) are based on tree transformations. These are done using the function rescale in the geiger package and are coded as follows: "1" = BM (Brownian motion), "2" = deltaTree, "3" = kappaTree, "4" = ouTree, 5 = "lambdaTree". The tree transformations can be parameterized using the argument evol.model.param. 
 }
 
 \author{ Laure Gallien, Tamara Münkemüller }
@@ -40,7 +39,10 @@ create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.ph
 
 \examples{
 pool <- create.pool(n.species.pool=500, n.invader.pool=1, evol.model="deltaTree", min.phyl.signal=NA, evol.model.param=0.1, nrep=1)   
-
+# plot tree
+plot(pool$phy)
+# calculate phylogenetic signal
+phylosignal(pool$func$niche_evol, pool$phy, checkdata=FALSE)
 }
 
 \keyword{ species pool }
