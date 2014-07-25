@@ -53,42 +53,11 @@
 
 \examples{
 	# load pre-prepared parameter table
-	data(param1)	
+	data(simple_param)	
 	# run the first line of the parameter table
-	single.run <- simulation.experiment(param1[1,]) # run the first line
+	single.run <- simulation.experiment(simple_param[1,]) # run the first line
 	str(single.run)
 	
-	# setting up a full experiment (this may take a few minutes) 
-	# In this example traits evolve either on an untransformed or on a delta transformed tree. The latter should result in higher phylogenetic signal. Communities are assembled randomly, under a pure environmental filter or under a competition filter.
-	wrapper <- function(a){
-	  library(VirtualCom)
-	  data(param1)
-	  print(a)
-	  return(try(simulation.experiment(param1[a,])))	
-	}  
-	# running the experiment either with lapply ...
-	output1 <- lapply(1:nrow(param1), wrapper) 	
-	# ... or running the experiment with sfLapply using snowfall to allow for parallel computing
-	require(snowfall)
-	sfInit(parallel=TRUE, cpus=11)
-	output1 <- sfLapply(1:nrow(param1), wrapper)
-	sfStop()
-	
-	# results put together in one table
-	result.table1 <- getResults(output=output1, myvar="obs", invader="FALSE")
-	result.table1$evol.model.param <- ifelse(result.table1$evol.model.param==1, "no", "yes")
-	result.table1$process <- ifelse(result.table1$beta.env==0 & result.table1$beta.comp==0, "Random", ifelse(result.table1$beta.env!=0 & result.table1$beta.comp==0, "Env", ifelse(result.table1$beta.env==0 & result.table1$beta.comp!=0, "Comp", "Both") ))
-	result.table1 <- result.table1[result.table1$process != "Both",]
-	head(result.table1)
-	Ks <- aggregate(result.table1$Blom_K, list(result.table1$evol.model.param), mean)
-	
-	# plot results for functional and phylogenetic mpd
-	require(ggplot2)
-	plot1 <- ggplot(data=result.table1, aes(x=process, y=FD_ab_mpd))+ geom_boxplot(width=0.8) +  xlab("Assembly rules") +  ylab("Functional diversity")   	
-	plot2 <- ggplot(data=result.table1, aes(x=process, y=PD_ab_mpd)) + geom_boxplot(aes(fill= evol.model.param), width=0.8) + xlab("Assembly rules") +  ylab("Phylogenetic diversity") + theme(legend.justification=c(1,0), legend.position=c(0.42,0)) + scale_fill_discrete(name = "Tree transformed?", labels=c(paste("no; K~", round(Ks[1,2],2),sep=""), paste("yes; K~", round(Ks[2,2],2),sep=""))) 
-	multiplot(plot1, plot2, cols=2)
-
-  
 }
 
 \keyword{ assembly }

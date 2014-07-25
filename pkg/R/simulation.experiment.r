@@ -1,5 +1,5 @@
 simulation.experiment <- function(parameters, ...){
-  	# to test: parameters=as.numeric(param[12,]); names(parameters) <- names(param[1,])
+  	# to test: parameters=as.numeric(simple_param[1,]); names(parameters) <- names(simple_param[1,])
   	  	
     #-------------------------------------
     # get input parameters
@@ -59,11 +59,14 @@ simulation.experiment <- function(parameters, ...){
     # Native community assembly 
     #-------------------------------------
     # Get the optima for the native species only 
-    if(n.invader.pool <=1){
+    if(n.invader.pool ==0){
+      niche.optima.nat <- niche.optima	
+  	  names(niche.optima.nat) <- names(niche.optima)
+    }
+    if(n.invader.pool ==1){
       niche.optima.nat <- niche.optima[pool$func$RandInv==0]	
   	  names(niche.optima.nat) <- pool$func[pool$func$RandInv==0,"SpeciesID"]  
     }
-    
     if(n.invader.pool >1){
       if(InvDistrib == 1){
         niche.optima.nat <- niche.optima[pool$func$UnderInv==0]  
