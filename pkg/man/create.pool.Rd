@@ -1,5 +1,5 @@
-\name{create.pool.invasion}
-\alias{create.pool.invasion}
+\name{ create.pool }
+\alias{ create.pool }
 
 \title{ Create several species pools containing more than 1 invader }
 

@@ -3,7 +3,7 @@
 
 \title{ Community assembly from species pool  }
 \description{
-  This function simulates the spatially implicit assembly of individuals into a community over time. Individuals come from a pool of species. In the pool each species is described by its niche (mean and sd of a Gaussian distribution) and its frequency. 
+  This function simulates the spatially implicit assembly of individuals into a community over time. Individuals come from a pool of species. In the pool each species is described by a niche trait (mean and sd of a Gaussian distribution) and its frequency. 
 }
 \usage{
 tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0, years=20, K=20, community.in=NA, species.pool.abundance=NA, plot=FALSE, ...)
@@ -11,31 +11,31 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
 }
 
 \arguments{
-  \item{niche.optima}{ vector of niche optima (means of the Gaussian distribution) in species-pool }
-  \item{niche.breadth}{ value of standard deviation of the Gaussian distribution that describes the niches (for now the same for all species) }
-  \item{env}{ value of the environmental optimum of the habitat the community is occupying  }
+  \item{niche.optima}{ vector of niche optima (means of the Gaussian distributions that describe the niches) in species-pool }
+  \item{niche.breadth}{ value of standard deviation of the Gaussian distributions that describe the niches (for now the same for all species) }
+  \item{env}{ value of the environmental optimum of the plot the community is occupying  }
   \item{beta.env}{ value of the strength of the environmental filter (see details)  }
   \item{beta.comp}{ value of the strength of the competition filter (see details)  }
   \item{beta.abun}{ value of the strength of the local abundance filter, i.e. the advantage of already being present in the community (see details)  }
-  \item{years}{ number of simulated years; If plots == TRUE equilibrium conditions can be checked by eye  }
+  \item{years}{ number of simulated time-steps; if plots == TRUE equilibrium conditions can be checked by eye  }
   \item{K}{ value of carrying capacity, i.e. number of individuals in the community  }
-  \item{community.in}{ vector of individuals (described by species names) already in the community; if NA than community is initialized randomly from species pool  }
-  \item{species.pool.abundance}{ vector of abundances in species pool; if NA than all are set to 1  }
-  \item{plot}{ if TRUE than development of filters and community composition is plotted over time  }
+  \item{community.in}{ vector of individuals (described by species names) already in the community; if NA community is initialized randomly from species pool  }
+  \item{species.pool.abundance}{ vector of abundances in species pool; if NA than all are equally abundant  }
+  \item{plot}{ if TRUE than community composition is plotted }
   }
 
 
 \value{
   List of objects: 
-  \item{community}{ vector of individuals (names of species in community in final year) }
+  \item{community}{ vector of individuals (names of species in community) in final year) }
   \item{abundances}{ matrix of species X abundances  }
-  \item{all.communities}{ matrix of individuals (names of species in community) X years } 
+  \item{communities.over.time}{ matrix of individuals (names of species in community) over time-steps } 
   
-  The plots on the left side show how the distribution of the three filters (besides the environmental filter which is kept constant) change over time. The plots on the right side show the dynamics of the overall filter (proportional to the probabilities in the multinomial distribution), the abundances distribution dynamics and the dynamics of mpd (mean pariwise distance from picante) over time (note that the negative values on the x-axis refer to random community assembly to fascilitate comparison).   
+  The plots on the left side show the influence of each of the three filters (y-axes) on each species (x-axes) over time. The plots on the right side show the influence of the overall       filter (top), the abundances distribution and the dynamics of mpd (mean pariwise distance from picante) over time (green horizontal lines indicate the range of random expectations).   
 }
 
 \details{
-  Community assembly is simulated by asynchroneous updating of K individuals per year. For each update a random individual is removed and replaced by an individual from the species pool. The choice of that individual follows a multinomial distribution, with probabilities being driven by an environmental filter, a competition filter and a local abundance weight. 
+  Community assembly is simulated by asynchroneous updating of K individuals per year. For each update a random individual is removed and replaced by an individual from the species   pool. The choice of that individual follows a multinomial distribution, with probabilities being driven by an environmental filter, a competition filter and a local abundance weight. 
 
   Environmental filter, p.env: dnorm(niche.optimum[i], mean=env, sd=niche.breadth) / dnorm(env, mean=env, sd=niche.breadth), with i  the species index  
   
@@ -43,28 +43,21 @@ tamaure(niche.breadth=5, niche.optima, env, beta.env=0, beta.comp=0, beta.abun=0
   
   Abundance weight, p.abun: species.pool.abundance_i + beta.abun * abun_i, with abun beeing abundance in community 
   
-  The probability of a species to enter the community is proportional to:
-  p.all = exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(p.abun))
+  The probability of a species to enter the community is proportional to: p.all = exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(p.abun))
 }
 
-\author{ Laure Gallien, Tamara Munkemuller }
-\seealso{ \code{\link{simulation.experiment}} for complete simulation experiments with simulation of species pool and diversity analyses of final community structures}
+\author{ Laure Gallien, Tamara Münkemüller }
+\seealso{ \code{\link{simulation.experiment}} for running simulation experiments with an integrated simulation of species pools and diversity analyses of final community structures}
 
 \examples{
-  niche.optima <- rnorm(200, 100, 20) # create traits of species in species pool
-  # niche.optima <- runif(200, 0, 200)
-  niche.optima <- sort(niche.optima) # nicer for the plots
-  names(niche.optima) <- seq(niche.optima)
-  
-  # Run the following with plot=TRUE to follow filter and community dynamics over time
-  # only environmental filter
-  tamaure(beta.env=10, beta.comp=0, beta.abun=0, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=FALSE)
-  # only competition filter; there is a border effect!
-  tamaure(beta.env=0, beta.comp=10, beta.abun=2, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=FALSE)
-  # only abundance weight; increased importance of local abundance changes variance of mpd!; very slow convergence
-  tamaure(beta.env=0, beta.comp=0, beta.abun=100, years=100, niche.breadth=5, niche.optima=niche.optima, env=100, K=50, communityIn=NA, plot=FALSE)
+# create species pool
+pool <- create.pool(n.species.pool=500, n.invader.pool=1, evol.model="deltaTree", min.phyl.signal=NA, evol.model.param=0.1, nrep=1, env=50)   
+niche.optima <- pool$func$niche_evol
+names(niche.optima) <- pool$func$SpeciesID
 
-
+# run community assembly either with only an environmental filter or with only a competition filter
+env.filter.community <- tamaure(niche.breadth=2, niche.optima=niche.optima, env=50, beta.env=1, beta.comp=0, beta.abun=1, years=10, K=100, plot=TRUE)
+competition.community <- tamaure(niche.breadth=2, niche.optima=niche.optima, env=50, beta.env=0, beta.comp=10, beta.abun=1, years=10, K=100, plot=TRUE)
 }
 
 \keyword{ assembly }
