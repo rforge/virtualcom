@@ -39,7 +39,7 @@ create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.ph
 \seealso{ \code{\link{simulation.experiment}} for running simulation experiments with an integrated simulation of species pools and diversity analyses of final community structures}
 
 \examples{
-
+pool <- create.pool(n.species.pool=500, n.invader.pool=1, evol.model="deltaTree", min.phyl.signal=NA, evol.model.param=0.1, nrep=1)   
 
 }
 

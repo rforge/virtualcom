@@ -1,6 +1,6 @@
 create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, nrep=499){
 	
-	# to test: n.species.pool=n.species.pool ; n.invader.pool=n.invader.pool ; evol.model=evol.model ; min.phyl.signal=min.phyl.signal ; evol.model.param=evol.model.param ; nrep=99
+	# to test: n.species.pool=n.species.pool ; n.invader.pool=n.invader.pool ; evol.model=evol.model ;  min.phyl.signal=min.phyl.signal ; evol.model.param=evol.model.param ; nrep=99
 	
 	# Create the species pool
 	pool <- trait.evolution(branchingRate=0.1, Nleaves=n.species.pool, Ninv=n.invader.pool, 
@@ -31,8 +31,8 @@ create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.sig
   	    
     if(n.invader.pool==1){
       pool$invader <- list(	ID = pool[[1]][pool[[1]]$RandInv==1, "SpeciesID"], 
-      						opt = niche.optima[pool[[1]][pool[[1]]$RandInv==1, "SpeciesID"]]) 
-     }
+      						opt = niche.optima[pool[[1]][pool[[1]]$RandInv==1, "SpeciesID"]])
+    }
     
     if(n.invader.pool > 1){
       pool$invader <- list(	ID = list(
