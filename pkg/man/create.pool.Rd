@@ -1,22 +1,21 @@
 \name{ create.pool }
 \alias{ create.pool }
 
-\title{ Create several species pools containing more than 1 invader }
+\title{ simulates a species pools }
 
 \description{
-  Create several species pools containing several invaders.
+  simulates a species pools containing a phylogeny, species trait niches and information on invasion status
 }
 
 \usage{
-create.pool.invasion(n.species.pool, n.invader.pool, env, evol.model, evol.model.param, min.phyl.signal, nreps, ...)
+create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.phyl.signal, nrep)
 }
 
 \arguments{
-  \item{n.species.pool}{ number of species in the species pool }
-  \item{n.invader.pool}{ number of invaders in the species pool }
-  \item{env}{ trait value of the phylogenetic root, used when evolving the trait on the phylogeny }
-  \item{evol.model}{ choice of evolutionary model which determines phylogenetic signal; 1: BM, 2: delta, 3:Kappa, 4: OU }
-  \item{evol.model.param}{ only when evol.model different from brownian motion. It is the alpha parameter }
+  \item{n.species.pool}{ number of species (natives and invaders) }
+  \item{n.invader.pool}{ number of invaders }
+  \item{evol.model}{ choice of evolutionary model which determines phylogenetic signal, see details  }
+  \item{evol.model.param}{ when evol.model is different from Brownian motion, see details }
   \item{min.phyl.signal}{ minimal phylogenetic signal }
   \item{n.rep}{ number of repetition for the null models }
   }
@@ -31,9 +30,13 @@ create.pool.invasion(n.species.pool, n.invader.pool, env, evol.model, evol.model
   \item{parameters}{ The parameters used for creating the species pool } 
   }
 
+\details{
+   The different evolutionary models (argument evol.mod) are based on tree transformations see (\code{\link{rescale} for more details): 1= 	
+	"1" = BM (Brownian motion), "2" = deltaTree, "3" = kappaTree, "4" = ouTree, 5 = "lambdaTree". The tree transformation can be parameterized using the argument evol.model.param. 
+}
 
-\author{ Laure Gallien }
-\seealso{ \code{\link{simulation.experiment}} for complete simulation experiments with simulation of species pool and diversity analyses of final community structures}
+\author{ Laure Gallien, Tamara Münkemüller }
+\seealso{ \code{\link{simulation.experiment}} for running simulation experiments with an integrated simulation of species pools and diversity analyses of final community structures}
 
 \examples{
 
