@@ -1,3 +1,4 @@
+# this function is a modified version of colless.test{apTreeshape}. The only change is that printing commands are out-commented.
 colless.test.no.print <- function (tree, model = "yule", alternative = "less", n.mc = 500)
 {
     colless3 <- function(n, model, p = 1/3) {

@@ -1,4 +1,4 @@
-getResults <- function(output, myvar, invader="FALSE"){
+get.results <- function(output, myvar, invader="FALSE"){
 	if(invader=="FALSE"){ 
 	   list.of.results <- lapply(1:length(output), function(x) {
 		data.frame(c(output[[x]]$parameter, output[[x]]$pool$indices), eval(parse(text=paste("output[[",x,"]]$natives$indices$", myvar, sep=""))))})

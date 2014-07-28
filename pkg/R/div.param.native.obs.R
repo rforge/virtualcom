@@ -1,6 +1,4 @@
 div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat){
-	#  spSite=spSiteNat[1:10,]; niche.optima=niche.optima.nat; tree=tree.nat; phy=dist.phy.nat; fun=dist.fun.nat; nrep=n.rep.null.model; null.model = null.model; suit=sp.suit; taxa=taxa; indX.nat=indX.nat
-	# spSite=spSiteNULL[,,1]; niche.optima=niche.opt; tree=tree; indX.nat=indX.nat
     spSite <- as.data.frame(spSite)
     if (ncol(spSite)==1){spSite <- as.data.frame(t(spSite))}
     spSite.dummy <- replace(spSite, spSite > 0, 1)
@@ -41,16 +39,11 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat)
 		if("FD_ab_CSD" %in% indX.nat) {results$FD_ab_CSD = apply(spSite, 1, function(x){sqrt(wtd.var(niche.optima,weights=x))})}
 		if("FD_ab_FEve" %in% indX.nat) {results$FD_ab_FEve = FD_ab_vill$FEve}
   		if("FD_ab_FDis" %in% indX.nat) {results$FD_ab_FDis = FD_ab_vill$FDis}
-
-	    	
 		if("PD_pa_mpd" %in% indX.nat) {results$PD_pa_mpd = mpd(spSite, phy, abundance.weighted=FALSE)}
 		if("PD_pa_mntd" %in% indX.nat) {results$PD_pa_mntd = mntd(spSite, phy, abundance.weighted=FALSE)}
 		if("PD_pa_faith" %in% indX.nat) {results$PD_pa_faith = apply(spSite, 1, function(x){
 							tree.red <- drop.tip(tree,as.character(tree$tip.label[x==0]))
 							sum(tree.red$edge.length)})}
-		# if("PD_pa_colless" %in% indX.nat & !any(rowSums(spSite != 0) <= 2)) {results$PD_pa_colless = apply(spSite, 1, function(x){
-        # tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
-        # colless(as.treeshape(tree.red), norm="yule")})}
 		if("PD_pa_betasplit" %in% indX.nat) {results$PD_pa_betasplit = apply(spSite, 1, function(x){
         tree.red <- drop.tip(tree, as.character(tree$tip.label[x==0]))
         maxlik.betasplit(as.treeshape(tree.red))$max_lik})}           
@@ -61,11 +54,7 @@ div.param.native.obs <- function(spSite, phy, fun, niche.optima, tree, indX.nat)
 		if("PD_ab_mntd" %in% indX.nat) {results$PD_ab_mntd = mntd(spSite, phy, abundance.weighted=TRUE)}
 		if("PD_ab_FEve" %in% indX.nat) {results$PD_ab_FEve = PD_ab_vill$FEve}
     	if("PD_ab_FDis" %in% indX.nat) {results$PD_ab_FDis = PD_ab_vill$FDis}
-
-
-
 		tt <- sapply(results, function(X){!is.null(X)})
-		results2 <- results[tt]
-		#names(results2) <- indX.nat				
+		results2 <- results[tt]				
 		return(results2)
 }

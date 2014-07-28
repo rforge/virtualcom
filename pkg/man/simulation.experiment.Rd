@@ -58,6 +58,30 @@
 	single.run <- simulation.experiment(simple_param[1,]) # run the first line
 	str(single.run)
 	
+	# setting up a full experiment (this may take a few minutes) 
+	wrapper <- function(a){
+	  library(VirtualCom)
+	  data(simple_param)
+	  print(a)
+	  return(try(simulation.experiment(simple_param[a,])))	
+	}  
+	# running the experiment either with lapply
+	output <- lapply(1:nrow(simple_param), wrapper) 
+	
+	# or running the experiment with sfLapply using snowfall to allow for parallel computing
+	require(snowfall)
+	sfInit(parallel=TRUE, cpus=11)
+	output <- sfLapply(1:nrow(simple_param), wrapper)
+	sfStop()
+	
+	# extract results from list
+    result.table <- get.results(output=output, myvar="obs", invader="FALSE")
+	result.table$process <- ifelse(result.table$beta.env==0 & result.table$beta.comp==0, "Random", ifelse(result.table$beta.env!=0 & result.table$beta.comp==0, "Env", ifelse(result.table$beta.env==0 & result.table$beta.comp!=0, "Comp", "Both") ))
+
+	# plot the funtional diversity (mpd) of communities in dependence on assembly processes
+	require(ggplot2)
+	ggplot(data=result.table, aes(x=process, y=FD_ab_mpd)) + geom_boxplot(width=0.8) +  xlab("Assembly rules") +  ylab("Functional diversity")
+	
 }
 
 \keyword{ assembly }

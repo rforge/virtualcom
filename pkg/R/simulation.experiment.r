@@ -1,6 +1,4 @@
 simulation.experiment <- function(parameters, ...){
-  	# to test: parameters=as.numeric(simple_param[1,]); names(parameters) <- names(simple_param[1,])
-  	  	
     #-------------------------------------
     # get input parameters
     #-------------------------------------  
@@ -46,7 +44,6 @@ simulation.experiment <- function(parameters, ...){
   	beta.abun <- parameters["beta.abun"]
     species.pool.abundance <- parameters["species.pool.abundance"]
 
-  
     #-------------------------------------
     # Species pool: phylogenetic tree, trait values and invaders in the tree
     #-------------------------------------     
