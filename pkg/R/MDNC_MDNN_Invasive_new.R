@@ -41,56 +41,63 @@
 # These two dataframes have sites by rows and species of interest names by columns. 
 #
 ##########################################################################################
-MDNC_MDNN_Invasive_new <- function (samp, dis, inva, invaderOut=FALSE) {
-	mdnc_fun <- function(samp_temp, dis, inva, sp, invaderOut){
-		N <- dim(samp_temp)[1]	#number of plots
-		mdnc_sp <- mdnn_sp <- mdwnc_sp <- mdmas_sp <- numeric(N)
-		for (i in 1:N) {
-			# remove species not in the given community
-            sppInSample <- names(samp_temp[i, samp_temp[i, ] > 0]) 
-        	# remove invasive species (species that should not be accounted for)
-			if(invaderOut==TRUE) sppInSample <- c(sp, sppInSample[-which(sppInSample %in% intersect(sppInSample, inva))]) #CHANGED: introduced variable invaderOut           
-			if (length(sppInSample) > 1) {
-				# extract the distance between species "sp" and the remaining community
-				sample.dis <- dis[sppInSample[-which(sppInSample==sp)], sp]
-          		# distance to the nearest species
-				mdnn_sp[i] <-min(sample.dis)
-           		# distance the unweighted mean community
-				mdnc_sp[i] <- mean(sample.dis)                                                     
-				# distance to the weighted mean community
-				mdwnc_sp[i] <- w.mean(sample.dis, samp_temp[i, sppInSample[-which(sppInSample==sp)]])
-				# distance to the most abundant species
-				mdmas_sp[i] <- most.abdt(sample.dis, samp_temp[i,sppInSample[-which(sppInSample==sp)]])                              
-        	} else {
-        		mdnn_sp[i] <-  mdnc_sp[i] <- mdwnc_sp[i] <- mdmas_sp[i] <- 0 
-        	}
-		}
-		res=list()
-		res$mdnn_sp=mdnn_sp
-		res$mdnc_sp=mdnc_sp
-		res$mdwnc_sp=mdwnc_sp
-		res$mdmas_sp=mdmas_sp
-		return(res)		
-	}	
-	# Estimate the mean weighted by the abundance of each species in the community
-	w.mean <- function(data, abun){ res <- sum(data*(abun/sum(abun))) ; return(res) }
-	most.abdt <- function(data, abun){	 res <- mean(data[abun==max(abun)]) }
-
-	MDNC <- MDNN <- MDWNC <- MDMAS <- as.data.frame(matrix(NA, ncol=length(inva), nrow=nrow(samp), dimnames=list(rownames(samp), inva))) 
-	samp = as.data.frame(samp)
-	for(j in 1:length(inva)){
-		samp_temp <- samp[eval(parse(text=paste("samp$", inva[j], ">0", sep=""))),]
-		if(nrow(samp_temp)==0) stop(paste("The species", inva[j], "does not appear in any community", sep=" "))
-		res <- mdnc_fun(samp_temp, dis, inva, inva[j], invaderOut)
-		MDNC[rownames(samp_temp),j] <- res$mdnc_sp
-		MDNN[rownames(samp_temp),j] <- res$mdnn_sp
-		MDWNC[rownames(samp_temp),j] <- res$mdwnc_sp
-		MDMAS[rownames(samp_temp),j] <- res$mdmas_sp		
-	}
-	result=list()
-	result$MDNC=MDNC
-	result$MDNN=MDNN
-	result$MDWNC=MDWNC
-	result$MDMAS=MDMAS
-	return(result)
+MDNC_MDNN_Invasive_new <- function(samp, dis, inva, invaderOut = FALSE) {
+    mdnc_fun <- function(samp_temp, dis, inva, sp, invaderOut) {
+        N <- dim(samp_temp)[1]  #number of plots
+        mdnc_sp <- mdnn_sp <- mdwnc_sp <- mdmas_sp <- numeric(N)
+        for (i in 1:N) {
+            # remove species not in the given community
+            sppInSample <- names(samp_temp[i, samp_temp[i, ] > 0])
+            # remove invasive species (species that should not be accounted for)
+            if (invaderOut == TRUE) 
+                sppInSample <- c(sp, sppInSample[-which(sppInSample %in% intersect(sppInSample, inva))])  #CHANGED: introduced variable invaderOut           
+            if (length(sppInSample) > 1) {
+                # extract the distance between species 'sp' and the remaining community
+                sample.dis <- dis[sppInSample[-which(sppInSample == sp)], sp]
+                # distance to the nearest species
+                mdnn_sp[i] <- min(sample.dis)
+                # distance the unweighted mean community
+                mdnc_sp[i] <- mean(sample.dis)
+                # distance to the weighted mean community
+                mdwnc_sp[i] <- w.mean(sample.dis, samp_temp[i, sppInSample[-which(sppInSample == sp)]])
+                # distance to the most abundant species
+                mdmas_sp[i] <- most.abdt(sample.dis, samp_temp[i, sppInSample[-which(sppInSample == sp)]])
+            } else {
+                mdnn_sp[i] <- mdnc_sp[i] <- mdwnc_sp[i] <- mdmas_sp[i] <- 0
+            }
+        }
+        res = list()
+        res$mdnn_sp = mdnn_sp
+        res$mdnc_sp = mdnc_sp
+        res$mdwnc_sp = mdwnc_sp
+        res$mdmas_sp = mdmas_sp
+        return(res)
+    }
+    # Estimate the mean weighted by the abundance of each species in the community
+    w.mean <- function(data, abun) {
+        res <- sum(data * (abun/sum(abun)))
+        return(res)
+    }
+    most.abdt <- function(data, abun) {
+        res <- mean(data[abun == max(abun)])
+    }
+    
+    MDNC <- MDNN <- MDWNC <- MDMAS <- as.data.frame(matrix(NA, ncol = length(inva), nrow = nrow(samp), dimnames = list(rownames(samp), inva)))
+    samp = as.data.frame(samp)
+    for (j in 1:length(inva)) {
+        samp_temp <- samp[eval(parse(text = paste("samp$", inva[j], ">0", sep = ""))), ]
+        if (nrow(samp_temp) == 0) 
+            stop(paste("The species", inva[j], "does not appear in any community", sep = " "))
+        res <- mdnc_fun(samp_temp, dis, inva, inva[j], invaderOut)
+        MDNC[rownames(samp_temp), j] <- res$mdnc_sp
+        MDNN[rownames(samp_temp), j] <- res$mdnn_sp
+        MDWNC[rownames(samp_temp), j] <- res$mdwnc_sp
+        MDMAS[rownames(samp_temp), j] <- res$mdmas_sp
+    }
+    result = list()
+    result$MDNC = MDNC
+    result$MDNN = MDNN
+    result$MDWNC = MDWNC
+    result$MDMAS = MDMAS
+    return(result)
 }
