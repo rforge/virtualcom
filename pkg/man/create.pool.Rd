@@ -4,11 +4,11 @@
 \title{ simulates a species pools }
 
 \description{
-  simulates a species pools containing a phylogeny, species trait niches and information on invasion status
+  simulates a species pools containing a phylogeny, species trait values and information on invasion status
 }
 
 \usage{
-create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.phyl.signal, nrep)
+create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.phyl.signal, nrep=499)
 }
 
 \arguments{
@@ -16,8 +16,8 @@ create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.ph
   \item{n.invader.pool}{ number of invaders }
   \item{evol.model}{ choice of evolutionary model which determines phylogenetic signal, see details  }
   \item{evol.model.param}{ applies only if evol.model is different from Brownian motion, see details }
-  \item{min.phyl.signal}{ minimal phylogenetic signal }
-  \item{n.rep}{ number of repetition for the null models }
+  \item{min.phyl.signal}{ minimum level of phylogenetic signal accepetd, if min.phyl.signal=NA no minimum limit   }
+  \item{n.rep}{ number of repetition for phylogenetic signal and tree imbalance tests }
   }
 
 
@@ -31,7 +31,7 @@ create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.ph
   }
 
 \details{
-   The different evolutionary models (argument evol.mod) are based on tree transformations. These are done using the function rescale in the geiger package and are coded as follows: "1" = BM (Brownian motion), "2" = deltaTree, "3" = kappaTree, "4" = ouTree, 5 = "lambdaTree". The tree transformations can be parameterized using the argument evol.model.param. 
+   The different evolutionary models (argument: evol.mod) are based on tree transformations. These are done using the function rescale in the geiger package and are coded as follows: "1" = BM (Brownian motion), "2" = deltaTree, "3" = kappaTree, "4" = ouTree, 5 = "lambdaTree". The tree transformations can be parameterized using the argument evol.model.param. 
 }
 
 \author{ Laure Gallien, Tamara Münkemüller }
