@@ -1,4 +1,8 @@
 ### To export automatically all classes, methods and functions ###
-exportPattern("^[[:alpha:]]+")
+
+# make any variable whose name does not begin with a dot available
+# exportPattern("^[^\\.]")
+# exportPattern("^[[:alphabet:]]+")
+# make any variable whose name begins with a letter available
 exportClassPattern("^[[:alpha:]]+")
 
