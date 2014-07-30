@@ -1,42 +1,20 @@
-### To export automatically all classes, methods and functions ###
+# Default NAMESPACE created by R
+# Remove the previous line if you edit this file
 
-# make any variable whose name does not begin with a dot available
-# exportPattern("^[^\\.]")
-# make any variable whose name begins with a letter available
-# exportPattern("^[[:alphabet:]]+")
-# exportClassPattern("^[[:alpha:]]+")
+# Export all names
+exportPattern(".")
 
-##### Methods & Functions
-
-## user level
-exportMethods(
-	colless.test.no.print,
-	create.pool,
-	div.param.invasion.obs,
-	div.param.invasion,
-        div.param.native.obs,
-	div.param.native,
-	get.results,
-	invasion_randomization,
-	MDNC_MDNN_Invasive_new,
-	multiplot,
-	simulation.experiment,
-	tamaure,
-	trait.evolution
-)
-
-export(
-	colless.test.no.print,
-	create.pool,
-	div.param.invasion.obs,
-	div.param.invasion,
-        div.param.native.obs,
-	div.param.native,
-	get.results,
-	invasion_randomization,
-	MDNC_MDNN_Invasive_new,
-	multiplot,
-	simulation.experiment,
-	tamaure,
-	trait.evolution
+# Import all packages listed as Imports or Depends
+import(
+  ape,
+  fields,
+  geiger,
+  picante,
+  ade4,
+  cluster,
+  vegan,
+  Hmisc,
+  apTreeshape,
+  FD,
+  RandomFields
 )
