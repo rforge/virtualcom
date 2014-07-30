@@ -3,6 +3,40 @@
 # make any variable whose name does not begin with a dot available
 # exportPattern("^[^\\.]")
 # make any variable whose name begins with a letter available
-exportPattern("^[[:alphabet:]]+")
+# exportPattern("^[[:alphabet:]]+")
 # exportClassPattern("^[[:alpha:]]+")
 
+##### Methods & Functions
+
+## user level
+exportMethods(
+	colless.test.no.print,
+	create.pool,
+	div.param.invasion.obs,
+	div.param.invasion,
+        div.param.native.obs,
+	div.param.native,
+	get.results,
+	invasion_randomization,
+	MDNC_MDNN_Invasive_new,
+	multiplot,
+	simulation.experiment,
+	tamaure,
+	trait.evolution
+)
+
+export(
+	colless.test.no.print,
+	create.pool,
+	div.param.invasion.obs,
+	div.param.invasion,
+        div.param.native.obs,
+	div.param.native,
+	get.results,
+	invasion_randomization,
+	MDNC_MDNN_Invasive_new,
+	multiplot,
+	simulation.experiment,
+	tamaure,
+	trait.evolution
+)
