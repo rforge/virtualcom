@@ -1,1 +1,4 @@
+### To export automatically all classes, methods and functions ###
+exportPattern("^[[:alpha:]]+")
+exportClassPattern("^[[:alpha:]]+")
 
