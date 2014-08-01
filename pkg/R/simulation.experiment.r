@@ -1,4 +1,4 @@
-simulation.experiment <- function(parameters, ...) {
+simulation.experiment <- function(parameters) {
     # ------------------------------------- get input parameters -------------------------------------
     my.names <- names(parameters)
     parameters <- as.numeric(parameters)
