@@ -8,7 +8,7 @@
 }
 
 \usage{
-create.pool(n.species.pool, n.invader.pool, evol.model, evol.model.param, min.phyl.signal, nrep=499)
+create.pool(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, nrep=499)
 }
 
 \arguments{
