@@ -33,11 +33,15 @@ get.results(output, myvar, invader="FALSE")
 	  print(a)
 	  return(try(simulation.experiment(simple_param[a,])))	
 	}  
-	# running the experiment with sfLapply using snowfall to allow for parallel computing
-	require(snowfall)
-	sfInit(parallel=TRUE, cpus=11)
-	output <- sfLapply(1:nrow(simple_param), wrapper)
-	sfStop()
+	
+	# running the experiment either with lapply
+	output <- lapply(1:nrow(simple_param), wrapper) 
+
+	## running the experiment with sfLapply using snowfall to allow for parallel computing
+	# require(snowfall)
+	# sfInit(parallel=TRUE, cpus=11)
+	# output <- sfLapply(1:nrow(simple_param), wrapper)
+	# sfStop()
 	
 	# extract results from list
     result.table <- get.results(output=output, myvar="obs", invader="FALSE") 
