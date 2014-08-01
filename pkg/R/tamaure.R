@@ -1,5 +1,5 @@
 tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.comp = 0, beta.abun = 0, years = 20, K = 20, community.in = NA, species.pool.abundance = NA, 
-    plot = FALSE, ...) {
+    plot = FALSE) {
     # ------- 1. getting input -------
     species.count <- length(niche.optima)  # nb of species in the species pool
     if (is.na(species.pool.abundance[1])) 

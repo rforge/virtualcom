@@ -17,7 +17,7 @@ create.pool(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.mo
   \item{evol.model}{ choice of evolutionary model which determines phylogenetic signal, see details  }
   \item{evol.model.param}{ applies only if evol.model is different from Brownian motion, see details }
   \item{min.phyl.signal}{ minimum level of phylogenetic signal accepetd, if min.phyl.signal=NA no minimum limit   }
-  \item{n.rep}{ number of repetition for phylogenetic signal and tree imbalance tests }
+  \item{nrep}{ number of repetition for phylogenetic signal and tree imbalance tests }
   }
 
 
