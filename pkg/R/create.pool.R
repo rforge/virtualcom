@@ -1,3 +1,45 @@
+#' Simulates a species pool
+#' 
+#' Simulates a species pool containing a phylogeny, species trait values and information on invasion status.
+#' 
+#' @details
+#' The different evolutionary models (argument: evol.mod) are based on 
+#' tree transformations. These are done using the function rescale in 
+#' the geiger package and are coded as follows: "1" = BM (Brownian motion),
+#' "2" = deltaTree, "3" = kappaTree, "4" = ouTree, 5 = "lambdaTree". 
+#' The tree transformations can be parameterized using the argument 
+#' evol.model.param.
+#' 
+#' @param n.species.pool number of species (natives and invaders)
+#' @param n.invader.pool number of invaders
+#' @param evol.model choice of evolutionary model which determines phylogenetic signal, see details
+#' @param min.phyl.signal minimum level of phylogenetic signal accepetd, if min.phyl.signal=NA no minimum limit
+#' @param evol.model.param applies only if evol.model is different from Brownian motion, see details
+#' @param nrep number of repetition for phylogenetic signal and tree imbalance tests
+#' 
+#' @return
+#'   List of objects: 
+#'   \describe{
+#'   \item{func}{ evolved functional traits for each species of the pool }
+#'   \item{phylo}{ phylogenetic tree of the species pool  }
+#'   \item{indices}{ results of phylogenetic signal and colless test for phylogenetic tree shape } 
+#'   \item{invader}{ list of the invader's identities and trait values } 
+#'   \item{parameters}{ the parameters used for creating the species pool } 
+#'   }
+#' 
+#' @seealso
+#' \code{\link{simulation.experiment}} for running simulation 
+#' experiments with an integrated simulation of species pools and 
+#' diversity analyses of final community structures.
+#' 
+#' @examples
+#' pool <- create.pool(n.species.pool=500, n.invader.pool=1, evol.model="deltaTree", min.phyl.signal=NA, evol.model.param=0.1, nrep=1)
+#' # plot tree
+#' plot(pool$phy)
+#' # calculate phylogenetic signal
+#' phylosignal(pool$func$niche_evol, pool$phy, checkdata=FALSE)
+#' @export
+
 create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, nrep = 499) {
     # Create the species pool
     pool <- trait.evolution(branchingRate = 0.1, Nleaves = n.species.pool, Ninv = n.invader.pool, which.evolution.model = evol.model, extraTreeParam = evol.model.param)

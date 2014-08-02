@@ -1,3 +1,54 @@
+#' Community assembly from a given species pool
+#' 
+#' This function simulates the spatially implicit assembly of individuals 
+#' into a community over time. Individuals come from a given pool of 
+#' species. In the pool each species is described by its trait's niche 
+#' (mean and sd of a Gaussian distribution) and its frequency of 
+#' occurrence in the studied region. 
+#' 
+#' @param niche.breadth value of standard deviation of the Gaussian distributions that describe the niches (identical for all species)
+#' @param niche.optima vector of niche optima (means of the Gaussian distributions that describe the niches) in species-pool
+#' @param env value of the environment in the simulated community (e.g. temperature)
+#' @param beta.env value of the strength of the environmental filter (see details)
+#' @param beta.comp value of the strength of the competition filter (see details)
+#' @param beta.abun value of the strength of the recruitment filter (see details)
+#' @param years number of simulated time-steps; if plots == TRUE equilibrium conditions can be checked by eye
+#' @param K value of carrying capacity, i.e. number of individuals in the community
+#' @param community.in vector of individuals (described by species names) already in the community; if NA community is initialized randomly from species pool
+#' @param species.pool.abundance vector of species frequency of occurrence in species pool; if NA than all are equally frequent
+#' @param plot if TRUE then community composition is plotted
+#' @return
+#'   List of objects: 
+#'   \describe{
+#'   \item{community}{ vector of individuals (names of species in community) in the final year) }
+#'   \item{abundances}{ species abundance matrix in the final year }
+#'   \item{communities.over.time}{ matrix of all individuals (identified by their species name) over all time-steps } 
+#'   }
+#'   
+#'   The plots on the left side show the influence of each of the three filters (y-axes) on each species (x-axes) over time. The plots on the right side show the influence of the overall filter effects (top), the abundances distribution and the dynamics of mpd (mean functional pariwise distance from picante) over time (green horizontal lines indicate the range of random expectations).   
+#' @details
+#'   Community assembly is simulated by asynchroneous updating of K individuals per year. For each update a random individual is removed and replaced by an individual from the species pool. The choice of that individual follows a multinomial distribution, with probabilities being driven by an environmental filter, a competition filter and a recruitment filter. 
+#'   
+#'   Environmental filter, p.env = dnorm(niche.optimum[i], mean=env, sd=niche.breadth) / dnorm(env, mean=env, sd=niche.breadth), with i being the species identity  
+#'   
+#'   Competition filter, p.comp= 1 - sum(alpha_ij * N_j)/sum(N_j), with j being the individuals already in the community and alpha_ij the niche-overlap 
+#'   
+#'   Recruitment filter, p.abun = species.pool.abundance_i + beta.abun * abun_i, with abun beeing the species i abundance in community 
+#'   
+#'   The probability of a species to enter the community is proportional to: p.all = exp(beta.env * log(p.env) + beta.comp * log(p.comp) + log(p.abun))
+#' @seealso \code{\link{simulation.experiment}} for running simulation experiments with an integrated simulation of species pools and diversity analyses of final community structures
+#' @examples
+#' # create species pool
+#' pool <- create.pool(n.species.pool=500, n.invader.pool=1, evol.model="deltaTree", min.phyl.signal=NA, evol.model.param=0.1, nrep=1)   
+#' niche.optima <- pool$func$niche_evol
+#' names(niche.optima) <- pool$func$SpeciesID
+#' 
+#' # run community assembly either with only an environmental filter or with only a competition filter
+#' env.filter.community <- tamaure(niche.breadth=2, niche.optima=niche.optima, env=50, beta.env=1, beta.comp=0, beta.abun=1, years=10, K=100, plot=TRUE)
+#' competition.community <- tamaure(niche.breadth=2, niche.optima=niche.optima, env=50, beta.env=0, beta.comp=10, beta.abun=1, years=10, K=100, plot=TRUE)
+#' @keywords assembly invasion competition habitat filtering
+#' @export
+
 tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.comp = 0, beta.abun = 0, years = 20, K = 20, community.in = NA, species.pool.abundance = NA, 
     plot = FALSE) {
     # ------- 1. getting input -------
