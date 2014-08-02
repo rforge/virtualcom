@@ -1,10 +1,24 @@
 Package: VirtualCom
 Type: Package
 Title: Assembling virtual plant communities
-Depends: ape, fields, geiger, picante, ade4, cluster, vegan, Hmisc, apTreeshape, FD, RandomFields, ggplot2, snowfall
+Depends:
+    ape,
+    fields,
+    geiger,
+    picante,
+    ade4,
+    cluster,
+    vegan,
+    Hmisc,
+    apTreeshape,
+    FD,
+    RandomFields,
+    ggplot2,
+    snowfall
 Version: 1.0
 Date: 2014-07-23
-Author: Laure Gallien & Tamara Münkemüller
-Maintainer: Laure Gallien <laure.gallien@gmail.com>, Tamara Münkemüller <Tamara.Muenkemueller@ujf-grenoble.fr>
+Author: Laure Gallien & Tamara Munkemuller
+Maintainer: Laure Gallien <laure.gallien@gmail.com>, Tamara Munkemuller
+    <Tamara.Muenkemueller@ujf-grenoble.fr>
 Description: Simulating eco-evolutionary community assembly and invasion
 License: GPL-2
