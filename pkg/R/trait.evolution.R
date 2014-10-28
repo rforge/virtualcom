@@ -32,9 +32,10 @@ trait.evolution <- function(branchingRate = 0.1, Nleaves = 100, Ninv = 1, minOpt
     }
     if (which.evolution.model == "OUwie.sim") {
         myTree_tmp <- myTree
-        datas <- get.attractors(phy=myTree_tmp, theta=OUwie.theta, ngroups=2, method="single", plotting=FALSE, randomize=TRUE)
+        datas <- get.attractors(phy=myTree_tmp, theta=OUwie.theta, ngroups=length(OUwie.theta), method="single", plotting=FALSE, randomize=TRUE)
         myTree_tmp$node.label <- datas$attractor[(length(myTree_tmp$tip.label)+1) : nrow(datas)]
-        myTrait <- OUwie.sim(phy=myTree_tmp, data=datas[1:length(myTree_tmp$tip.label),], sigma.sq = OUwie.sigma.sq, theta0 = 0, theta=OUwie.theta, alpha=OUwie.alpha)[,3]
+        if(length(levels(factor(myTree_tmp$node.label))) != length(OUwie.theta)) warning("OUwie.sim does not work for single-tip attractors")
+         myTrait <- OUwie.sim(phy=myTree_tmp, data=datas[1:length(myTree_tmp$tip.label),], sigma.sq = OUwie.sigma.sq, theta0 = 0, theta=OUwie.theta, alpha=OUwie.alpha)[,3]
         names(myTrait) <- 1:length(myTrait)
     }
     
