@@ -6,7 +6,7 @@
 #' The different evolutionary models (argument: evol.mod) are based on 
 #' tree transformations. These are done using the function rescale in 
 #' the geiger package and are coded as follows: "1" = BM (Brownian motion),
-#' "2" = deltaTree, "3" = kappaTree, "4" = ouTree, 5 = "lambdaTree". 
+#' "2" = deltaTree, "3" = kappaTree, "4" = lambdaTree, "5" = OUwie.sim (Ornstein-Uhlenbeck process). 
 #' The tree transformations can be parameterized using the argument 
 #' evol.model.param.
 #' 
@@ -14,7 +14,11 @@
 #' @param n.invader.pool number of invaders
 #' @param evol.model choice of evolutionary model which determines phylogenetic signal, see details
 #' @param min.phyl.signal minimum level of phylogenetic signal accepetd, if min.phyl.signal=NA no minimum limit
-#' @param evol.model.param applies only if evol.model is different from Brownian motion, see details
+#' @param rescale if TRUE the trait values will be rescaled between 0 and 100
+#' @param evol.model.param applies only if evol.model is deltaTree, kappaTree or lambdaTree, see details
+#' @OUwie.sigma.sq applies only if evol.model is OUwie.sim, a numeric vector giving the values of sigma^2 for each selective regime 
+#' @OUwie.theta applies only if evol.model is OUwie.sim, a numeric vector giving the values of theta for each selective regime 
+#' @OUwie.alpha applies only if evol.model is OUwie.sim, a numeric vector giving the values of alpha for each selective regime 
 #' @param nrep number of repetition for phylogenetic signal and tree imbalance tests
 #' 
 #' @return
@@ -40,16 +44,17 @@
 #' phylosignal(pool$func$niche_evol, pool$phy, checkdata=FALSE)
 #' @export
 
-create.pool <- function(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, nrep = 499) {
+create.pool <- function(n.species.pool, n.invader.pool, evol.model, rescale=TRUE, min.phyl.signal, evol.model.param=NA, OUwie.sigma.sq=NA, OUwie.theta=NA, OUwie.alpha=NA, nrep = 499) {
     # Create the species pool
-    pool <- trait.evolution(branchingRate = 0.1, Nleaves = n.species.pool, Ninv = n.invader.pool, which.evolution.model = evol.model, extraTreeParam = evol.model.param)
+    pool <- trait.evolution(branchingRate = 0.1, Nleaves = n.species.pool, Ninv = n.invader.pool, which.evolution.model = evol.model, rescale=rescale, tree.shape.param = evol.model.param, OUwie.sigma.sq=OUwie.sigma.sq, OUwie.theta=OUwie.theta, OUwie.alpha=OUwie.alpha)
     niche.optima <- pool[[1]]$niche_evol
     names(niche.optima) <- pool[[1]]$SpeciesID
     
     # Redo if phylogenetic signal has a minimum value:
     if (!is.na(min.phyl.signal)) {
         while (phylosignal(niche.optima, pool[[2]])$K < min.phyl.signal) {
-            pool <- trait.evolution(branchingRate = 0.1, Nleaves = n.species.pool, Ninv = n.invader.pool, which.evolution.model = evol.model, extraTreeParam = evol.model.param)
+            pool <- trait.evolution(branchingRate = 0.1, Nleaves = n.species.pool, Ninv = n.invader.pool, which.evolution.model = evol.model, rescale=rescale, tree.shape.param = evol.model.param, OUwie.sigma.sq=OUwie.sigma.sq, OUwie.theta=OUwie.theta, OUwie.alpha=OUwie.alpha)
+
             niche.optima <- pool[[1]]$niche_evol
             names(niche.optima) <- pool[[1]]$SpeciesID
         }

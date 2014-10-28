@@ -17,6 +17,8 @@
 #' @param community.in vector of individuals (described by species names) already in the community; if NA community is initialized randomly from species pool
 #' @param species.pool.abundance vector of species frequency of occurrence in species pool; if NA than all are equally frequent
 #' @param plot if TRUE then community composition is plotted
+#' @param competition choice between symmetric and asymmetric competition; in the latter case species with higher trait values put pressure on species with lower trait values (species with lower trait values do not influence species with higher trait values)
+#' @param intra.sp.com assigns the strength of intraspecific competition; the value should range between 0 (no intraspecific competition) and 1 (intraspecific competition always higher than interspecific competition) 
 #' @return
 #'   List of objects: 
 #'   \describe{
@@ -49,8 +51,7 @@
 #' @keywords assembly invasion competition habitat filtering
 #' @export
 
-tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.comp = 0, beta.abun = 0, years = 20, K = 20, community.in = NA, species.pool.abundance = NA, 
-    plot = FALSE) {
+tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.comp = 0, beta.abun = 0, years = 20, K = 20, community.in = NA, species.pool.abundance = NA, plot = FALSE, competititon="symmetric", intra.sp.com=1) {
     # ------- 1. getting input -------
     species.count <- length(niche.optima)  # nb of species in the species pool
     if (is.na(species.pool.abundance[1])) 
@@ -58,9 +59,19 @@ tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.com
     
     # ------- 2. Creating the distance matrix from the niche overlap -------
     species.niche.dist <- as.matrix(dist(niche.optima, diag = TRUE, upper = TRUE))  # to calculate mpd
-    species.niche.overlap <- outer(niche.optima, niche.optima, function(x, y) {
+    # symmetric competition
+    species.niche.overlap.sym <- outer(niche.optima, niche.optima, function(x, y) {
         2 * pnorm(-abs((x - y))/2, mean = 0, sd = niche.breadth)
     })
+    # asymmetric competition
+    species.niche.overlap.asym <- outer(niche.optima, niche.optima, function(x, y) {
+        sign <- ifelse(x > y, 1, 0)
+        overlap <- 2 * pnorm(-abs((x - y))/2, mean = 0, sd = niche.breadth)
+        sign * overlap
+    }) 
+    diag(species.niche.overlap.sym) <- intra.sp.com
+    diag(species.niche.overlap.asym) <- intra.sp.com 
+ 
     # ------- 3. The loop -------
     out.community <- as.data.frame(matrix(NA, nrow = years + 1, ncol = K))  # to store community composition over time
     if (plot == TRUE) {
@@ -85,7 +96,8 @@ tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.com
         for (i in 1:K) {
             abundance <- as.numeric(table(community)[names(niche.optima)])
             abundance <- ifelse(is.na(abundance), 0, abundance)
-            p.comp <- 1 - colSums(species.niche.overlap[community, ])/K
+            if(competititon=="symmetric") p.comp <- 1 - colSums(species.niche.overlap.sym[community, ])/K
+            if(competititon=="asymmetric") p.comp <- 1 - colSums(species.niche.overlap.asym[community, ])/K
             p.all <- exp(beta.env * log.p.env + beta.comp * log(p.comp) + log(species.pool.abundance + beta.abun * abundance))
             p.all <- ifelse(is.na(p.all), min(p.all, na.rm = TRUE), p.all)
             if (sd(p.all, na.rm = TRUE) == 0) 

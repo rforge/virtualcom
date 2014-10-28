@@ -18,6 +18,10 @@
 #' \describe{
 #' \item{n.species.pool}{ number of species in the species pool (including native and invasive species) }
 #' \item{evol.model}{ choice of the trait evolution model (see also \code{\link{create.pool}}) }
+#' \item{rescale}{ if TRUE the trait values will be rescaled between 0 and 100 }
+#' \item{OUwie.sigma.sq}{ applies only if evol.model is OUwie.sim, a numeric vector giving the values of sigma^2 for each selective regime  }
+#' \item{OUwie.theta}{ applies only if evol.model is OUwie.sim, a numeric vector giving the values of theta for each selective regime } 
+#' \item{OUwie.alpha}{ applies only if evol.model is OUwie.sim, a numeric vector giving the values of alpha for each selective regime  }
 #' \item{evol.model.param}{ parameterization of the trait evolution model (see also \code{\link{create.pool}}) }
 #' \item{species.pool.abundance}{ vector of abundances in the species pool; if NA then all species are equally abundant }  
 #' \item{min.phyl.signal}{ minimum value of phylogenetic signal in species pool (see also \code{\link{create.pool}}) }   
@@ -29,6 +33,8 @@
 #' \item{beta.env}{ value of the strength of the environmental filter (see details) }
 #' \item{beta.comp}{ value of the strength of the competition filter (see details) }
 #' \item{beta.abun}{ value of the strength of the recruitment filter, i.e. the advantage of already being present in the community (see also \code{\link{tamaure}}) }   
+#' \item{competition}{ choice between symmetric and asymmetric competition; in the latter case species with higher trait values put pressure on species with lower trait values (species with lower trait values do not influence species with higher trait values)}
+#' \item{intra.sp.com}{ assigns the strength of intraspecific competition; the value should range between 0 (no intraspecific competition) and 1 (intraspecific competition always higher than interspecific competition) }
 #' \item{invasion.time}{ number of time-steps to simulate invasion (after native community has established); if 0 than there is no invasion }   
 #' \item{n.invader.pool}{ number of invaders in species pool  }                                                                                                                                 
 #' \item{InvDistrib}{ The invader's distribution in the phylogney can be either clusterd ("1"), random ("2") or  overdispersed ("3)  }                                                                                                                                 
@@ -91,8 +97,12 @@ simulation.experiment <- function(parameters) {
     n.species.pool <- parameters["n.species.pool"]
     n.invader.pool <- parameters["n.invader.pool"]
     niche.breadth <- parameters["niche.breadth"]
-    evol.model <- switch(parameters["evol.model"], `1` = "BM", `2` = "deltaTree", `3` = "kappaTree", `4` = "ouTree", `5` = "lambdaTree")
+    evol.model <- switch(parameters["evol.model"], `1` = "BM", `2` = "deltaTree", `3` = "kappaTree", `4` = "lambdaTree", `5` = "OUwie.sim")
     evol.model.param <- parameters["evol.model.param"]
+    rescale <- parameters["rescale"]
+    OUwie.sigma.sq <- parameters["OUwie.sigma.sq"]
+    OUwie.theta <- parameters["theta"]
+    OUwie.alpha <- parameters["alpha"]
     min.phyl.signal <- parameters["min.phyl.signal"]
     InvDistrib <- parameters["InvDistrib"]
     
@@ -107,13 +117,17 @@ simulation.experiment <- function(parameters) {
     beta.comp <- parameters["beta.comp"]
     beta.abun <- parameters["beta.abun"]
     species.pool.abundance <- parameters["species.pool.abundance"]
+    competititon <- switch(parameters["competition"], `1` = "symmetric", `2` = "asymmetric")
+    intra.sp.com <- parameters["intra.sp.com"]
     
     # ------------------------------------- Species pool: phylogenetic tree, trait values and invaders in the tree -------------------------------------
-    pool <- create.pool(n.species.pool, n.invader.pool, evol.model, min.phyl.signal, evol.model.param, n.rep.null.model)
+    pool <- create.pool(n.species.pool=n.species.pool, n.invader.pool=n.invader.pool, evol.model=evol.model, rescale=rescale, min.phyl.signal=min.phyl.signal, evol.model.param=evol.model.param, OUwie.sigma.sq=OUwie.sigma.sq, OUwie.theta=OUwie.theta, OUwie.alpha=OUwie.alpha, nrep=n.rep.null.model)
     niche.optima <- pool$func$niche_evol
     names(niche.optima) <- pool$func$SpeciesID
     
-    # ------------------------------------- Native community assembly ------------------------------------- Get the optima for the native species only
+    
+
+    # ------------------------------------- Native community assembly ------------------------------------- 
     if (n.invader.pool == 0) {
         niche.optima.nat <- niche.optima
         names(niche.optima.nat) <- names(niche.optima)
@@ -143,7 +157,7 @@ simulation.experiment <- function(parameters) {
     
     for (i in 1:n.communities) {
         one.community <- tamaure(niche.breadth = niche.breadth, niche.optima = niche.optima.nat, env = env, beta.env = beta.env, beta.comp = beta.comp, beta.abun = beta.abun, 
-            years = years, K = K, community.in = NA, plot = FALSE, species.pool.abundance = species.pool.abundance)
+            years = years, K = K, community.in = NA, plot = FALSE, species.pool.abundance = species.pool.abundance, competition=competition, intra.sp.com =intra.sp.com )
         all.communities[i, ] <- one.community$community
         all.abundances[i, ] <- one.community$abundances
     }
@@ -194,7 +208,7 @@ simulation.experiment <- function(parameters) {
         # Invasion assembly: with abiotic filters, biotic interactions and recruitment
         for (i in 1:n.communities) {
             one.community <- tamaure(community.in = all.communities[i, ], niche.optima = niche.optima, years = invasion.time, niche.breadth = niche.breadth, env = env, 
-                beta.env = beta.env, beta.comp = beta.comp, beta.abun = beta.abun, K = K, plot = FALSE, species.pool.abundance = species.pool.abundance)
+                beta.env = beta.env, beta.comp = beta.comp, beta.abun = beta.abun, K = K, plot = FALSE, species.pool.abundance = species.pool.abundance, competition=competition, intra.sp.com =intra.sp.com )
             all.communities.invaded[i, ] <- one.community$community
             all.abundances.invaded[i, ] <- one.community$abundances
             invasion.dynamics[[i]] <- one.community$communities.over.time[-1, ]

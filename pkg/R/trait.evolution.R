@@ -1,4 +1,4 @@
-trait.evolution <- function(branchingRate = 0.1, Nleaves = 100, Ninv = 1, minOpt = 0, maxOpt = 100, which.evolution.model = "BM", mysigma = 0.01, extraTreeParam = NA) {
+trait.evolution <- function(branchingRate = 0.1, Nleaves = 100, Ninv = 1, minOpt = 0, maxOpt = 100, which.evolution.model = "BM", rescale=TRUE, mysigma = 0.01, tree.shape.param = NA, OUwie.sigma.sq=NA, OUwie.theta=NA, OUwie.alpha=NA) {
     # Brownian motion of tree
     myTree <- sim.bdtree(branchingRate, 0, stop = "taxa", n = Nleaves)
     # change naming of tips so that tip labels and tip numbers in edge are the same and are ordered from 1 to Nleaves
@@ -10,7 +10,7 @@ trait.evolution <- function(branchingRate = 0.1, Nleaves = 100, Ninv = 1, minOpt
         myTrait <- rTraitCont(myTree, model = which.evolution.model, sigma = mysigma, root.value = 0)
     }
     if (which.evolution.model == "deltaTree") {
-        myTree_tmp <- rescale(myTree, model = "delta", extraTreeParam)
+        myTree_tmp <- rescale(myTree, model = "delta", tree.shape.param)
         # to capture the cases where rescale transformes branch lengths into NA or zero or negative values
         if (any(is.na(myTree_tmp$edge.length))) {
             which <- which(is.na(myTree_tmp$edge.length))
@@ -21,18 +21,20 @@ trait.evolution <- function(branchingRate = 0.1, Nleaves = 100, Ninv = 1, minOpt
         names(myTrait) <- 1:length(myTrait)
     }
     if (which.evolution.model == "lambdaTree") {
-        myTree_tmp <- rescale(myTree, model = "lambda", extraTreeParam)
+        myTree_tmp <- rescale(myTree, model = "lambda", tree.shape.param)
         myTrait <- rTraitCont(myTree_tmp, model = "BM", sigma = mysigma, root.value = 0)
         names(myTrait) <- 1:length(myTrait)
     }
     if (which.evolution.model == "kappaTree") {
-        myTree_tmp <- rescale(myTree, model = "kappa", extraTreeParam)
+        myTree_tmp <- rescale(myTree, model = "kappa", tree.shape.param)
         myTrait <- rTraitCont(myTree_tmp, model = "BM", sigma = mysigma, root.value = 0)
         names(myTrait) <- 1:length(myTrait)
     }
-    if (which.evolution.model == "ouTree") {
-        myTree_tmp <- rescale(myTree, model = "OU", extraTreeParam)
-        myTrait <- rTraitCont(myTree_tmp, model = "BM", sigma = mysigma, root.value = 0)
+    if (which.evolution.model == "OUwie.sim") {
+        myTree_tmp <- myTree
+        datas <- get.attractors(phy=myTree_tmp, theta=OUwie.theta, ngroups=2, method="single", plotting=FALSE, randomize=TRUE)
+        myTree_tmp$node.label <- datas$attractor[(length(myTree_tmp$tip.label)+1) : nrow(datas)]
+        myTrait <- OUwie.sim(phy=myTree_tmp, data=datas[1:length(myTree_tmp$tip.label),], sigma.sq = OUwie.sigma.sq, theta0 = 0, theta=OUwie.theta, alpha=OUwie.alpha)[,3]
         names(myTrait) <- 1:length(myTrait)
     }
     
@@ -40,7 +42,7 @@ trait.evolution <- function(branchingRate = 0.1, Nleaves = 100, Ninv = 1, minOpt
     logist <- function(x, lower = 0, upper = 100) {
         ((x - min(x)) * (upper - lower)/abs(max(x) - min(x))) + lower
     }
-    myTrait <- logist(myTrait, lower = minOpt, upper = maxOpt)
+    if(rescale==TRUE) myTrait <- logist(myTrait, lower = minOpt, upper = maxOpt)
     opt <- seq(minOpt, maxOpt, length.out = Nleaves)  # optimum value for all species (equal spacing between the species)
     attra <- as.data.frame(cbind(SpeciesID = myTree$tip.label, niche_evol = myTrait))
     rownames(attra) <- attra$SpeciesID
