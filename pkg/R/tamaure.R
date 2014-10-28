@@ -17,7 +17,7 @@
 #' @param community.in vector of individuals (described by species names) already in the community; if NA community is initialized randomly from species pool
 #' @param species.pool.abundance vector of species frequency of occurrence in species pool; if NA than all are equally frequent
 #' @param plot if TRUE then community composition is plotted
-#' @param competition choice between symmetric and asymmetric competition; in the latter case species with higher trait values put pressure on species with lower trait values (species with lower trait values do not influence species with higher trait values)
+#' @param competition choice between symmetric, asymmetric and hierarchical competition; in the two latter cases species with higher trait values put pressure on species with lower trait values (species with lower trait values do not influence species with higher trait values), under asymmetic competition, competitive strength depends on niche overlap (i.e. very different species do not compete), under hierarchical competition, niche overlap is unimportant
 #' @param intra.sp.com assigns the strength of intraspecific competition; the value should range between 0 (no intraspecific competition) and 1 (intraspecific competition always higher than interspecific competition) 
 #' @return
 #'   List of objects: 
@@ -69,8 +69,14 @@ tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.com
         overlap <- 2 * pnorm(-abs((x - y))/2, mean = 0, sd = niche.breadth)
         sign * overlap
     }) 
+    # hierarchical competition
+    species.comp.hierarchy <- outer(niche.optima, niche.optima, function(x, y) {
+        ifelse(x > y, 1, 0)
+    }) 
+
     diag(species.niche.overlap.sym) <- intra.sp.com
     diag(species.niche.overlap.asym) <- intra.sp.com 
+    diag(species.comp.hierarchy) <- intra.sp.com 
  
     # ------- 3. The loop -------
     out.community <- as.data.frame(matrix(NA, nrow = years + 1, ncol = K))  # to store community composition over time
@@ -98,6 +104,7 @@ tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.com
             abundance <- ifelse(is.na(abundance), 0, abundance)
             if(competititon=="symmetric") p.comp <- 1 - colSums(species.niche.overlap.sym[community, ])/K
             if(competititon=="asymmetric") p.comp <- 1 - colSums(species.niche.overlap.asym[community, ])/K
+            if(competititon=="hierarchical") p.comp <- 1 - colSums(species.comp.hierarchy[community, ])/K
             p.all <- exp(beta.env * log.p.env + beta.comp * log(p.comp) + log(species.pool.abundance + beta.abun * abundance))
             p.all <- ifelse(is.na(p.all), min(p.all, na.rm = TRUE), p.all)
             if (sd(p.all, na.rm = TRUE) == 0) 
