@@ -33,7 +33,7 @@
 #' \item{beta.env}{ value of the strength of the environmental filter (see details) }
 #' \item{beta.comp}{ value of the strength of the competition filter (see details) }
 #' \item{beta.abun}{ value of the strength of the recruitment filter, i.e. the advantage of already being present in the community (see also \code{\link{tamaure}}) }   
-#' \item{competition}{ choice between symmetric and asymmetric competition; in the latter case species with higher trait values put pressure on species with lower trait values (species with lower trait values do not influence species with higher trait values)}
+#' \item{competition}{ choice between symmetric, asymmetric and hierarchical competition; in the two latter cases species with higher trait values put pressure on species with lower trait values (species with lower trait values do not influence species with higher trait values), under asymmetic competition, competitive strength depends on niche overlap (i.e. very different species do not compete), under hierarchical competition, niche overlap is unimportant}
 #' \item{intra.sp.com}{ assigns the strength of intraspecific competition; the value should range between 0 (no intraspecific competition) and 1 (intraspecific competition always higher than interspecific competition) }
 #' \item{invasion.time}{ number of time-steps to simulate invasion (after native community has established); if 0 than there is no invasion }   
 #' \item{n.invader.pool}{ number of invaders in species pool  }                                                                                                                                 
@@ -117,7 +117,7 @@ simulation.experiment <- function(parameters) {
     beta.comp <- parameters["beta.comp"]
     beta.abun <- parameters["beta.abun"]
     species.pool.abundance <- parameters["species.pool.abundance"]
-    competititon <- switch(parameters["competition"], `1` = "symmetric", `2` = "asymmetric")
+    competititon <- switch(parameters["competition"], `1` = "symmetric", `2` = "asymmetric", `3` = "hierarchical")
     intra.sp.com <- parameters["intra.sp.com"]
     
     # ------------------------------------- Species pool: phylogenetic tree, trait values and invaders in the tree -------------------------------------
