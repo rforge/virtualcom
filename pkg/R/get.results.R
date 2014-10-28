@@ -40,16 +40,14 @@
 get.results <- function(output, myvar, invader = "FALSE") {
     if (invader == "FALSE") {
         list.of.results <- lapply(1:length(output), function(x) {
-            if(is.na(output[[x]]$natives$indices)) data.frame(c(output[[x]]$parameter, output[[x]]$pool$indices))
-            else data.frame(c(output[[x]]$parameter, output[[x]]$pool$indices), eval(parse(text = paste("output[[", x, "]]$natives$indices$", myvar, sep = ""))))
+            data.frame(c(output[[x]]$parameter, output[[x]]$pool$indices), eval(parse(text = paste("output[[", x, "]]$natives$indices$", myvar, sep = ""))))
         })
     } else {
         list.of.results <- lapply(1:length(output), function(x) {
             allInv <- names(output[[x]]$invaders$indices)
             if (length(allInv) >= 1) {
                 for (inv in 1:length(allInv)) {
-                  if(is.na(output[[x]]$natives$indices)) temp <- data.frame(c(output[[x]]$parameter, output[[x]]$pool$indices), allInv[inv])
-                  else temp <- data.frame(c(output[[x]]$parameter, output[[x]]$pool$indices), eval(parse(text = paste("output[[", x, "]]$invaders$indices[[", inv, "]]$", myvar, 
+                  temp <- data.frame(c(output[[x]]$parameter, output[[x]]$pool$indices), eval(parse(text = paste("output[[", x, "]]$invaders$indices[[", inv, "]]$", myvar, 
                     sep = ""))), allInv[inv])
                   if (inv == 1) 
                     tempA <- temp else tempA <- rbind(tempA, temp)
