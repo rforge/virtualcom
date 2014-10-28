@@ -51,7 +51,7 @@
 #' @keywords assembly invasion competition habitat filtering
 #' @export
 
-tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.comp = 0, beta.abun = 0, years = 20, K = 20, community.in = NA, species.pool.abundance = NA, plot = FALSE, competititon="symmetric", intra.sp.com=1) {
+tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.comp = 0, beta.abun = 0, years = 20, K = 20, community.in = NA, species.pool.abundance = NA, plot = FALSE, competition="symmetric", intra.sp.com=1) {
     # ------- 1. getting input -------
     species.count <- length(niche.optima)  # nb of species in the species pool
     if (is.na(species.pool.abundance[1])) 
@@ -102,9 +102,9 @@ tamaure <- function(niche.breadth = 5, niche.optima, env, beta.env = 0, beta.com
         for (i in 1:K) {
             abundance <- as.numeric(table(community)[names(niche.optima)])
             abundance <- ifelse(is.na(abundance), 0, abundance)
-            if(competititon=="symmetric") p.comp <- 1 - colSums(species.niche.overlap.sym[community, ])/K
-            if(competititon=="asymmetric") p.comp <- 1 - colSums(species.niche.overlap.asym[community, ])/K
-            if(competititon=="hierarchical") p.comp <- 1 - colSums(species.comp.hierarchy[community, ])/K
+            if(competition=="symmetric") p.comp <- 1 - colSums(species.niche.overlap.sym[community, ])/K
+            if(competition=="asymmetric") p.comp <- 1 - colSums(species.niche.overlap.asym[community, ])/K
+            if(competition=="hierarchical") p.comp <- 1 - colSums(species.comp.hierarchy[community, ])/K
             p.all <- exp(beta.env * log.p.env + beta.comp * log(p.comp) + log(species.pool.abundance + beta.abun * abundance))
             p.all <- ifelse(is.na(p.all), min(p.all, na.rm = TRUE), p.all)
             if (sd(p.all, na.rm = TRUE) == 0) 

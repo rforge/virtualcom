@@ -117,7 +117,7 @@ simulation.experiment <- function(parameters) {
     beta.comp <- parameters["beta.comp"]
     beta.abun <- parameters["beta.abun"]
     species.pool.abundance <- parameters["species.pool.abundance"]
-    competititon <- switch(parameters["competition"], `1` = "symmetric", `2` = "asymmetric", `3` = "hierarchical")
+    competition <- switch(parameters["competition"], `1` = "symmetric", `2` = "asymmetric", `3` = "hierarchical")
     intra.sp.com <- parameters["intra.sp.com"]
     
     # ------------------------------------- Species pool: phylogenetic tree, trait values and invaders in the tree -------------------------------------
@@ -189,8 +189,12 @@ simulation.experiment <- function(parameters) {
         "FD_ab_CWM", "FD_ab_CSD", "PD_pa_mpd", "PD_pa_mntd", "PD_ab_mpd", "PD_ab_mntd", "FD_pa_FEve", "FD_pa_FDis", "FD_pa_faith", "FD_ab_FEve", "FD_ab_FDis", "PD_pa_FEve", 
         "PD_pa_FDis", "PD_pa_faith", "PD_pa_colless", "PD_ab_FEve", "PD_ab_FDis", "PD_pa_betasplit")  # never put only 1 index (at least 2), it would change the output format!
     
-    indices.nat <- div.param.native(spSite = all.abundances2, niche.opt = niche.optima.nat, tree = tree.nat, phy = dist.phy.nat, fun = dist.fun.nat, nrep = n.rep.null.model, 
-        null.model = null.model, indX.nat = indX.nat)  # zNULL = NaN when sdNULL=0\t\t\t\t  
+    if(n.rep.null.model==0) {
+    	    indices.nat <- NA
+    	} else {
+    		indices.nat <- div.param.native(spSite = all.abundances2, niche.opt = niche.optima.nat, tree = tree.nat, phy = dist.phy.nat, fun = dist.fun.nat, nrep = n.rep.null.model, 
+        null.model = null.model, indX.nat = indX.nat)  # zNULL = NaN when sdNULL=0\t\t\t\t 
+    } 
     
     # collect results
     output <- list()
@@ -244,7 +248,12 @@ simulation.experiment <- function(parameters) {
         
         if (length(invader.ID_Pres) > 0) {
             null.model <- ifelse(is.null(null.model), NULL, "native_inv")
-            indices.inv <- div.param.invasion(spSite = all.abundances.invaded, phy = dist.phy, fun = dist.fun, nrep = n.rep.null.model, invad = invader.ID_Pres, null.model = null.model)
+            if(n.rep.null.model==0) {
+    	       indices.inv <- NA
+    	    } else {
+    		    indices.inv <- div.param.invasion(spSite = all.abundances.invaded, phy = dist.phy, fun = dist.fun, nrep = n.rep.null.model, invad = invader.ID_Pres, null.model = null.model)
+            } 
+
             # collect results
             output$invaders$indices <- indices.inv
         } else {
